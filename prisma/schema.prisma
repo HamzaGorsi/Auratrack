@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(cuid())
+
+  email    String @unique
+  password String
+
+  username String @unique
+
+  createdAt DateTime @default(now())
+
+  player Player?
+
+  sentRequests FriendRequest[] @relation("Sender")
+
+  receivedRequests FriendRequest[] @relation("Receiver")
+
+  notifications Notification[]
+  searchHistory SearchHistory[]
+  bio           String? @default("")
+favoriteGame  String? @default("")
+avatarUrl     String? @default("")
+bannerUrl     String? @default("")
+connectedAccounts ConnectedAccount[]
+}
+
+model Player {
+  id        String   @id @default(cuid())
+
+  username  String
+  platform  String
+
+  kills     Int      @default(0)
+  deaths    Int      @default(0)
+  wins      Int      @default(0)
+  games     Int      @default(0)
+
+  rank      String   @default("Unranked")
+
+  bio           String @default("")
+  favoriteGame  String @default("Valorant")
+  bannerUrl     String @default("https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2000&auto=format&fit=crop")
+  avatarUrl     String @default("")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  matches Match[]
+
+  achievements Achievement[]
+
+  userId String? @unique
+  user   User? @relation(fields: [userId], references: [id])
+
+  @@index([username])
+  @@index([platform])
+
+  @@unique([username, platform])
+}
+
+model Match {
+  id        String   @id @default(cuid())
+
+  kills     Int
+  deaths    Int
+  wins      Int
+
+  createdAt DateTime @default(now())
+
+  playerId String
+  player   Player @relation(fields: [playerId], references: [id])
+}
+
+model FriendRequest {
+  id String @id @default(cuid())
+
+  senderId String
+  receiverId String
+
+  status String @default("PENDING")
+
+  createdAt DateTime @default(now())
+
+  sender User @relation("Sender", fields: [senderId], references: [id])
+
+  receiver User @relation("Receiver", fields: [receiverId], references: [id])
+}
+
+model Notification {
+  id String @id @default(cuid())
+
+  type String
+  message String
+
+  read Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Activity {
+  id String @id @default(cuid())
+
+  type String
+
+  message String
+
+  createdAt DateTime @default(now())
+}
+model SearchHistory {
+  id String @id @default(cuid())
+
+  username String
+  platform String
+
+  createdAt DateTime @default(now())
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+model Achievement {
+  id String @id @default(cuid())
+
+  title String
+  description String
+
+  icon String
+
+  unlockedAt DateTime @default(now())
+
+  playerId String
+  player Player @relation(fields: [playerId], references: [id])
+}
+model ConnectedAccount {
+  id String @id @default(cuid())
+
+  platform String
+  accountId String
+  username String
+  tagline String?
+puuid String?
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+}
