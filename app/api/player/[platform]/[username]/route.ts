@@ -48,7 +48,7 @@ export async function GET(
 
     const accountData =
       await accountRes.json();
-
+console.log("ACCOUNT DATA:", accountData);
     // MMR / RANK
     const mmrRes = await fetch(
       `https://api.henrikdev.xyz/valorant/v2/mmr/ap/${gameName}/${tagLine}`
@@ -60,7 +60,7 @@ export async function GET(
       rankData =
         await mmrRes.json();
     }
-
+console.log("RANK DATA:", rankData);
     // MATCHES
     const matchesRes = await fetch(
       `https://api.henrikdev.xyz/valorant/v3/matches/ap/${gameName}/${tagLine}?size=5`
@@ -75,14 +75,15 @@ export async function GET(
       matchesData =
         json.data || [];
     }
-
+console.log("MATCHES DATA:", matchesData);
     // CALCULATE STATS
     let totalKills = 0;
     let totalDeaths = 0;
     let wins = 0;
 
-    const formattedMatches =
-      matchesData.map(
+   const formattedMatches =
+  Array.isArray(matchesData)
+    ? matchesData.map(
         (match: any) => {
           const player =
             match.players.all_players.find(
@@ -143,7 +144,8 @@ return {
               match.metadata.game_start,
           };
         }
-      ).filter(Boolean);
+      ).filter(Boolean)
+    : [];
 
     const games =
       formattedMatches.length;
