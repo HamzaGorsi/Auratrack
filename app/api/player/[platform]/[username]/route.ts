@@ -51,7 +51,7 @@ export async function GET(
 
     // MMR / RANK
     const mmrRes = await fetch(
-      `https://api.henrikdev.xyz/valorant/v2/mmr/eu/${gameName}/${tagLine}`
+      `https://api.henrikdev.xyz/valorant/v2/mmr/ap/${gameName}/${tagLine}`
     );
 
     let rankData = null;
@@ -63,7 +63,7 @@ export async function GET(
 
     // MATCHES
     const matchesRes = await fetch(
-      `https://api.henrikdev.xyz/valorant/v3/matches/eu/${gameName}/${tagLine}?size=5`
+      `https://api.henrikdev.xyz/valorant/v3/matches/ap/${gameName}/${tagLine}?size=5`
     );
 
     let matchesData: any[] = [];
