@@ -86,11 +86,10 @@ console.log("MATCHES DATA:", matchesData);
     ? matchesData.map(
         (match: any) => {
           const player =
-            match.players.all_players.find(
+  match.players?.find(
               (p: any) =>
-                p.name
-                  .toLowerCase() ===
-                  gameName.toLowerCase()
+  p.name?.toLowerCase() ===
+  gameName.toLowerCase()
             );
 
           if (!player) {
