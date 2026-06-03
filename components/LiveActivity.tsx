@@ -45,16 +45,16 @@ export default function LiveActivity() {
         border
         border-white/[0.04]
         bg-black
-        p-8
+        p-5 sm:p-8
       "
     >
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <div>
           <div className="uppercase tracking-[4px] text-white/40 text-sm">
             Real-Time Platform Activity
           </div>
 
-          <h2 className="text-4xl font-black mt-3">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black mt-3">
             Live Activity
           </h2>
         </div>
@@ -89,14 +89,14 @@ export default function LiveActivity() {
                 rounded-2xl
                 border
                 border-white/[0.04]
-                from-[#18181b]
-                p-5
+                bg-[#161616]
+                p-4 sm:p-5
                 hover:bg-white/[0.03]
                 transition-all
                 duration-300
               "
             >
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
                   <div className="font-black text-lg">
                     {

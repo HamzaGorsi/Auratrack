@@ -152,8 +152,8 @@ async function saveProfile() {
 }
 if (loading) {
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="max-w-[1700px] mx-auto px-6 pt-36 pb-16">
+    <div className="min-h-screen overflow-x-hidden bg-black text-white">
+      <div className="max-w-[1700px] mx-auto px-4 sm:px-6 pt-28 sm:pt-36 pb-12 sm:pb-16">
 
         <div
           className="
@@ -164,7 +164,7 @@ if (loading) {
           "
         />
 
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-5 mt-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mt-6 sm:mt-8">
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
@@ -228,10 +228,10 @@ setTimeout(() => {
 
   setRiotName("");
 
-  setRiotTag("");
+    setRiotTag("");
 }, 2500);
 
-    console.log(data);
+    toast.success("Riot account connected!");
   } catch {
     toast.error(
       "Connection failed"
@@ -279,12 +279,15 @@ setTimeout(() => {
       "
     />
   )}
-  {/* DARK OVERLAY */}
+  {/* GRADIENT OVERLAY */}
   <div
     className="
       absolute
       inset-0
-      bg-[#161616]
+      bg-gradient-to-t
+      from-black
+      via-black/50
+      to-transparent
     "
   />
 </div>
@@ -354,8 +357,9 @@ setTimeout(() => {
     setEditing(!editing)
   }
   className="
-    h-14
-    px-8
+    w-full sm:w-auto
+    h-12 sm:h-14
+    px-6 sm:px-8
     rounded-2xl
     bg-gradient-to-r
     from-[#18181b]
@@ -380,14 +384,15 @@ setTimeout(() => {
       border
       border-white/[0.08]
       bg-black
-      p-8
+      bg-black
+      p-5 sm:p-8
     "
   >
     <div className="text-white/40 uppercase tracking-[4px] text-sm">
       Profile Customization
     </div>
 
-    <h2 className="text-4xl font-black mt-3">
+    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black mt-3">
       Edit Your Profile
     </h2>
 
@@ -539,7 +544,7 @@ setTimeout(() => {
   </div>
 )}
         {/* STATS */}
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-5 mt-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mt-6 sm:mt-8">
           {[
             {
               label: "Tracked Accounts",
@@ -577,7 +582,7 @@ setTimeout(() => {
                 {item.label}
               </div>
 
-              <div className="text-4xl font-black mt-4">
+              <div className="text-2xl sm:text-4xl font-black mt-3 sm:mt-4">
                 {item.value}
               </div>
             </div>
@@ -594,30 +599,36 @@ setTimeout(() => {
               border
               border-white/[0.08]
               bg-black
-              p-8
+              p-5 sm:p-8
             "
           >
             <div className="text-white/40 uppercase tracking-[4px] text-sm">
               Connected Platforms
             </div>
 
-            <h2 className="text-4xl font-black mt-3">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black mt-3">
               Accounts
             </h2>
-            <div className="grid grid-cols-1 gap-4 mt-8">
+            <div className="grid grid-cols-1 gap-3 sm:gap-4 mt-6 sm:mt-8">
 
   {[
   {
     key: "RIOT",
     label: "Riot Games",
+    accent: "text-red-400",
+    badge: "R",
   },
   {
     key: "STEAM",
     label: "Steam",
+    accent: "text-sky-400",
+    badge: "S",
   },
   {
     key: "EPIC",
     label: "Epic Games",
+    accent: "text-white",
+    badge: "E",
   },
 ].map((platform) => {
 
@@ -632,34 +643,57 @@ platform.key
       <div
         key={platform.key}
         className="
-          h-16
+          min-h-16
           rounded-2xl
           border
           border-white/[0.08]
-          bg-white/[0.02]
-          px-6
+          bg-[#111111]
+          px-4 sm:px-6
+          py-4
           flex
-          items-center
-          justify-between
+          flex-col
+          sm:flex-row
+          sm:items-center
+          gap-3
+          sm:justify-between
         "
       >
-     <div className="font-bold text-white/80">
-  {platform.label}
+     <div className="flex items-center gap-3 min-w-0">
+  <div
+    className={`
+      w-10 h-10 rounded-xl
+      bg-white/[0.04] border border-white/[0.06]
+      flex items-center justify-center
+      font-black text-sm flex-shrink-0
+      ${platform.accent}
+    `}
+  >
+    {platform.badge}
+  </div>
 
-  {linkedAccount && (
-    <>
-      {" - "}
-      {linkedAccount.username}
+  <div className="min-w-0">
+    <div className="font-bold text-white/90 truncate">
+      {platform.label}
+    </div>
 
-      {linkedAccount.tagline
-        ? `#${linkedAccount.tagline}`
-        : ""}
-    </>
-  )}
+    {linkedAccount ? (
+      <div className="text-sm text-white/50 truncate mt-0.5">
+        {linkedAccount.username}
+        {linkedAccount.tagline
+          ? `#${linkedAccount.tagline}`
+          : ""}
+      </div>
+    ) : (
+      <div className="text-sm text-white/30 mt-0.5">
+        Not connected
+      </div>
+    )}
+  </div>
 </div>
 
         {linkedAccount ? (
           <button
+            type="button"
             onClick={async () => {
 
               const res =
@@ -701,6 +735,7 @@ platform.key
               );
             }}
             className="
+              w-full sm:w-auto
               h-9
               px-4
               rounded-xl
@@ -716,6 +751,7 @@ platform.key
           </button>
         ) : (
           <button
+            type="button"
             onClick={() => {
               if (
                 platform.key ===
@@ -727,6 +763,7 @@ platform.key
               }
             }}
             className="
+              w-full sm:w-auto
               h-10
               px-5
               rounded-xl
@@ -738,9 +775,11 @@ platform.key
               font-bold
               transition-all
               duration-300
+              disabled:opacity-40
             "
+            disabled={platform.key !== "RIOT"}
           >
-            Link
+            {platform.key === "RIOT" ? "Link" : "Soon"}
           </button>
         )}
       </div>
@@ -755,14 +794,14 @@ platform.key
               border
               border-white/[0.08]
               bg-black
-              p-8
+              p-5 sm:p-8
             "
           >
             <div className="text-white/40 uppercase tracking-[4px] text-sm">
             Games played
             </div>
 
-            <h2 className="text-4xl font-black mt-3">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black mt-3">
               Library
             </h2>
 <div className="space-y-4 mt-8">
@@ -816,7 +855,7 @@ platform.key
         </div>
         {showRiotConnect && (
   <div
-    className="
+      className="
       fixed
       inset-0
       z-50
@@ -825,6 +864,7 @@ platform.key
       justify-center
       bg-black/70
       backdrop-blur-md
+      p-4
     "
   >
     <div
@@ -835,24 +875,22 @@ platform.key
         border
         border-white/[0.08]
         bg-[#050505]
-        p-8
-        animate-in
-        fade-in
-        zoom-in-95
+        p-5 sm:p-8
       "
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <div>
           <div className="text-white/40 uppercase tracking-[4px] text-sm">
             Riot Integration
           </div>
 
-          <h2 className="text-4xl font-black mt-2">
+          <h2 className="text-2xl sm:text-4xl font-black mt-2">
             Connect Account
           </h2>
         </div>
 
         <button
+          type="button"
           onClick={() =>
             setShowRiotConnect(
               false
@@ -872,7 +910,7 @@ platform.key
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mt-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 sm:mt-8">
         <input
           placeholder="Riot Name"
           value={riotName}

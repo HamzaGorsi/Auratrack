@@ -1,7 +1,223 @@
 import { prisma } from "@/lib/prisma";
+import {
+  henrikFetch,
+  parseHenrikMatches,
+} from "@/lib/henrik";
+
+export const dynamic = "force-dynamic";
+
+const DB_TIMEOUT_MS = 8000;
+
+async function upsertPlayerWithTimeout(
+  data: {
+    username: string;
+    platform: string;
+    kills: number;
+    deaths: number;
+    wins: number;
+    games: number;
+    rank: string;
+  }
+) {
+  try {
+    return await Promise.race([
+      prisma.player.upsert({
+        where: {
+          username_platform: {
+            username: data.username,
+            platform: data.platform,
+          },
+        },
+        update: {
+          kills: data.kills,
+          deaths: data.deaths,
+          wins: data.wins,
+          games: data.games,
+          rank: data.rank,
+        },
+        create: {
+          username: data.username,
+          platform: data.platform,
+          kills: data.kills,
+          deaths: data.deaths,
+          wins: data.wins,
+          games: data.games,
+          rank: data.rank,
+        },
+      }),
+      new Promise<never>((_, reject) => {
+        setTimeout(
+          () =>
+            reject(
+              new Error("Database timeout")
+            ),
+          DB_TIMEOUT_MS
+        );
+      }),
+    ]);
+  } catch (error) {
+    console.error("Player upsert failed:", error);
+
+    return {
+      id: "temp",
+      username: data.username,
+      platform: data.platform,
+      kills: data.kills,
+      deaths: data.deaths,
+      wins: data.wins,
+      games: data.games,
+      rank: data.rank,
+      bio: "",
+      favoriteGame: "Valorant",
+      bannerUrl: "",
+      avatarUrl: "",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      userId: null,
+    };
+  }
+}
+
+async function loadRiotValorantProfile(
+  username: string,
+  platform: string
+) {
+  const [gameName, tagLine] = username.split("#");
+
+  if (!gameName || !tagLine) {
+    return Response.json(
+      { error: "Invalid Riot ID. Use name#tag format." },
+      { status: 400 }
+    );
+  }
+
+  const encodedName = encodeURIComponent(gameName);
+  const encodedTag = encodeURIComponent(tagLine);
+
+  const accountRes = await henrikFetch(
+    `/valorant/v1/account/${encodedName}/${encodedTag}`
+  );
+
+  if (!accountRes.ok) {
+    const errorBody = await accountRes
+      .json()
+      .catch(() => null);
+
+    return Response.json(
+      {
+        error:
+          errorBody?.errors?.[0]?.message ??
+          "Player not found",
+      },
+      { status: accountRes.status === 401 ? 503 : 404 }
+    );
+  }
+
+  const accountJson = await accountRes.json();
+  const account = accountJson?.data;
+
+  if (!account) {
+    return Response.json(
+      { error: "Player not found" },
+      { status: 404 }
+    );
+  }
+
+  const region = (
+    account.region ?? "eu"
+  ).toLowerCase();
+  const puuid = account.puuid as
+    | string
+    | undefined;
+
+  const [mmrRes, matchesRes] = await Promise.all([
+    henrikFetch(
+      `/valorant/v2/mmr/${region}/${encodedName}/${encodedTag}`
+    ),
+    henrikFetch(
+      `/valorant/v3/matches/${region}/${encodedName}/${encodedTag}?size=5`
+    ),
+  ]);
+
+  let rankData: any = null;
+
+  if (mmrRes.ok) {
+    rankData = await mmrRes.json().catch(() => null);
+  }
+
+  let matchesData: unknown[] = [];
+
+  if (matchesRes.ok) {
+    const matchesJson = await matchesRes
+      .json()
+      .catch(() => null);
+
+    matchesData = Array.isArray(matchesJson?.data)
+      ? matchesJson.data
+      : [];
+  }
+
+  const {
+    formattedMatches,
+    totalKills,
+    totalDeaths,
+    wins,
+    games,
+    kd,
+    winrate,
+  } = parseHenrikMatches(
+    matchesData,
+    gameName,
+    tagLine,
+    puuid
+  );
+
+  const rank =
+    rankData?.data?.current_data
+      ?.currenttierpatched ?? "Unranked";
+
+  const elo =
+    rankData?.data?.current_data?.elo ?? 0;
+
+  const peakRank =
+    rankData?.data?.highest_rank
+      ?.patched_tier ?? "Unknown";
+
+  const player = await upsertPlayerWithTimeout({
+    username,
+    platform,
+    kills: totalKills,
+    deaths: totalDeaths,
+    wins,
+    games,
+    rank,
+  });
+
+  return Response.json({
+    player: {
+      ...player,
+      username:
+        account.name && account.tag
+          ? `${account.name}#${account.tag}`
+          : username,
+      kd,
+      winrate,
+      matches: games,
+      rank,
+      elo,
+      peakRank,
+      accountLevel: account.account_level ?? 0,
+      card: account.card?.large ?? account.card?.wide ?? "",
+      puuid: account.puuid ?? null,
+      region,
+      lastUpdated: new Date().toISOString(),
+    },
+    matches: formattedMatches,
+  });
+}
 
 export async function GET(
-  req: Request,
+  _req: Request,
   context: {
     params: Promise<{
       platform: string;
@@ -10,248 +226,89 @@ export async function GET(
   }
 ) {
   try {
-    const { platform, username } =
+    const { platform, username: rawUsername } =
       await context.params;
 
-    // username#tag
-    const [gameName, tagLine] =
-      username.split("#");
+    const username = decodeURIComponent(
+      rawUsername
+    );
 
-    if (!gameName || !tagLine) {
-      return Response.json(
-        {
-          error:
-            "Invalid Riot ID",
-        },
-        {
-          status: 400,
-        }
+    if (platform.toUpperCase() === "RIOT") {
+      return loadRiotValorantProfile(
+        username,
+        platform
       );
     }
 
-    // ACCOUNT LOOKUP
-    const accountRes = await fetch(
-      `https://api.henrikdev.xyz/valorant/v1/account/${gameName}/${tagLine}`
-    );
-
-    if (!accountRes.ok) {
-      return Response.json(
-        {
-          error:
-            "Player not found",
-        },
-        {
-          status: 404,
-        }
-      );
-    }
-
-    const accountData =
-      await accountRes.json();
-console.log("ACCOUNT DATA:", accountData);
-    // MMR / RANK
-    const mmrRes = await fetch(
-      `https://api.henrikdev.xyz/valorant/v2/mmr/ap/${gameName}/${tagLine}`
-    );
-
-    let rankData = null;
-
-    if (mmrRes.ok) {
-      rankData =
-        await mmrRes.json();
-    }
-console.log("RANK DATA:", rankData);
-    // MATCHES
-    const matchesRes = await fetch(
-      `https://api.henrikdev.xyz/valorant/v3/matches/ap/${gameName}/${tagLine}?size=5`
-    );
-
-    let matchesData: any[] = [];
-
-    if (matchesRes.ok) {
-      const json =
-        await matchesRes.json();
-
-      matchesData =
-        json.data || [];
-    }
-console.log("MATCHES DATA:", matchesData);
-    // CALCULATE STATS
-    let totalKills = 0;
-    let totalDeaths = 0;
-    let wins = 0;
-
-   const formattedMatches =
-  Array.isArray(matchesData)
-    ? matchesData.map(
-        (match: any) => {
-          const player =
-  match.players?.find(
-              (p: any) =>
-  p.name?.toLowerCase() ===
-  gameName.toLowerCase()
-            );
-
-          if (!player) {
-            return null;
-          }
-
-          totalKills +=
-            player.stats.kills;
-
-          totalDeaths +=
-            player.stats.deaths;
-
-          const winningTeam =
-  match.teams.red.has_won
-    ? "red"
-    : "blue";
-
-const didWin =
-  player.team.toLowerCase() ===
-  winningTeam;
-
-if (didWin) {
-  wins++;
-}
-
-return {
-  id: match.metadata.matchid,
-
-  map: match.metadata.map,
-
-  mode: match.metadata.mode,
-
-  kills:
-    player.stats.kills,
-
-  deaths:
-    player.stats.deaths,
-
-  assists:
-    player.stats.assists,
-
-  agent:
-    player.character,
-
-  result:
-    didWin
-      ? "Victory"
-      : "Defeat",
-
-            createdAt:
-              match.metadata.game_start,
-          };
-        }
-      ).filter(Boolean)
-    : [];
-
-    const games =
-      formattedMatches.length;
-
-    const kd =
-      totalDeaths > 0
-        ? (
-            totalKills /
-            totalDeaths
-          ).toFixed(2)
-        : totalKills.toString();
-
-    const winrate =
-      games > 0
-        ? (
-            (wins / games) *
-            100
-          ).toFixed(1)
-        : "0.0";
-
-    // SAVE/UPDATE PLAYER
-    const player =
-      await prisma.player.upsert({
+    const existing = await Promise.race([
+      prisma.player.findUnique({
         where: {
           username_platform: {
             username,
             platform,
           },
         },
-
-        update: {
-          kills: totalKills,
-          deaths: totalDeaths,
-          wins,
-          games,
-
-          rank:
-            rankData?.data
-              ?.current_data
-              ?.currenttierpatched ||
-            "Unranked",
+        include: {
+          matches: {
+            orderBy: { createdAt: "desc" },
+            take: 10,
+          },
+          achievements: true,
         },
+      }),
+      new Promise<null>((resolve) => {
+        setTimeout(() => resolve(null), DB_TIMEOUT_MS);
+      }),
+    ]);
 
-        create: {
-          username,
-          platform,
+    if (!existing) {
+      return Response.json(
+        { error: "Player not found" },
+        { status: 404 }
+      );
+    }
 
-          kills: totalKills,
-          deaths: totalDeaths,
-          wins,
-          games,
+    const kd =
+      existing.deaths > 0
+        ? (
+            existing.kills / existing.deaths
+          ).toFixed(2)
+        : existing.kills.toString();
 
-          rank:
-            rankData?.data
-              ?.current_data
-              ?.currenttierpatched ||
-            "Unranked",
-        },
-      });
+    const winrate =
+      existing.games > 0
+        ? (
+            (existing.wins / existing.games) *
+            100
+          ).toFixed(1)
+        : "0.0";
 
     return Response.json({
       player: {
-        ...player,
-
+        ...existing,
         kd,
-
         winrate,
-
-        rank:
-          rankData?.data
-            ?.current_data
-            ?.currenttierpatched ||
-          "Unranked",
-
-        elo:
-          rankData?.data
-            ?.current_data?.elo || 0,
-
-        peakRank:
-          rankData?.data
-            ?.highest_rank
-            ?.patched_tier ||
-          "Unknown",
-
-        card:
-          accountData?.data
-            ?.card?.large,
-
-        lastUpdated:
-          new Date(),
+        matches: existing.games,
       },
-
-      matches:
-        formattedMatches,
+      matches: existing.matches.map(
+        (match) => ({
+          id: match.id,
+          kills: match.kills,
+          deaths: match.deaths,
+          result:
+            match.wins > 0
+              ? "VICTORY"
+              : "DEFEAT",
+          createdAt: match.createdAt,
+        })
+      ),
     });
-
   } catch (error) {
-    console.error(error);
+    console.error("Player route error:", error);
 
     return Response.json(
-      {
-        error:
-          "Failed to load player",
-      },
-      {
-        status: 500,
-      }
+      { error: "Failed to load player" },
+      { status: 500 }
     );
   }
 }

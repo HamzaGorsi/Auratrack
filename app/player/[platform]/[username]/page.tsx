@@ -5,6 +5,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { useSession } from "next-auth/react";
 import { getProvider } from "@/lib/providers/getProvider";
 import PerformanceChart from "@/components/PerformanceChart";
+import { toast } from "sonner";
 
 const rankStyles: any = {
   Predator:
@@ -54,8 +55,6 @@ const provider =
 
   const [data, setData] =
     useState<any>(null);
-    const [riotData, setRiotData] =
-  useState<any>(null);
 const [providerProfile, setProviderProfile] =
   useState<any>(null);
   const [liveMatches, setLiveMatches] =
@@ -88,95 +87,84 @@ const [providerProfile, setProviderProfile] =
 
   async function loadPlayer() {
     setLoading(true);
-    await new Promise((resolve) =>
-  setTimeout(resolve, 1200)
-);
+    setNotFound(false);
 
-    const res = await fetch(
-      `/api/player/${resolvedParams.platform}/${resolvedParams.username}`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    const json = await res.json();
-
-    // PLAYER NOT FOUND
-    if (!res.ok || !json.player) {
-  await fetch("/api/player", {
-    method: "POST",
-
-    headers: {
-      "Content-Type": "application/json",
-    },
-
-    body: JSON.stringify({
-      username,
-      platform,
-    }),
-  });
-
-  return loadPlayer();
-}
-
-    setData(json);
-    if (
-  resolvedParams.platform === "RIOT"
-) {
-  const split =
-    username.split("#");
-
-  const gameName = split[0];
-  const tagLine = split[1];
-
-  if (gameName && tagLine) {
     try {
-      const riotRes = await fetch(
-        `/api/riot/account?gameName=${gameName}&tagLine=${tagLine}`
+      const res = await fetch(
+        `/api/player/${resolvedParams.platform}/${encodeURIComponent(resolvedParams.username)}`,
+        {
+          cache: "no-store",
+        }
       );
 
-      if (riotRes.ok) {
-        const riotJson =
-          await riotRes.json();
+      let json: any;
 
-        setRiotData(riotJson);
+      try {
+        json = await res.json();
+      } catch {
+        setNotFound(true);
+        return;
       }
+
+      if (!res.ok || !json?.player) {
+        toast.error(json?.error || "Player not found");
+        setNotFound(true);
+        return;
+      }
+
+      setData(json);
+
+      if (platform === "RIOT") {
+        setProviderProfile({
+          username:
+            json.player.username ?? username,
+          platform: "RIOT",
+          rank: json.player.rank ?? "Unranked",
+          level: json.player.elo ?? 0,
+          avatar: json.player.card ?? "",
+          puuid: json.player.puuid ?? null,
+        });
+
+        setLiveMatches(json.matches ?? []);
+      } else if (provider) {
+        try {
+          const profile =
+            await provider.searchPlayer(
+              username
+            );
+
+          setProviderProfile(profile);
+
+          const providerMatches =
+            await provider.getMatches(
+              username
+            );
+
+          setLiveMatches(
+            providerMatches?.length
+              ? providerMatches
+              : json.matches ?? []
+          );
+        } catch {
+          setLiveMatches(json.matches ?? []);
+        }
+      }
+
+      setBio(json.player.bio || "");
+      setFavoriteGame(
+        json.player.favoriteGame || ""
+      );
+      setBannerUrl(
+        json.player.bannerUrl ||
+          json.player.card ||
+          ""
+      );
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      setNotFound(true);
+    } finally {
+      setLoading(false);
     }
-  }
-}
-
-    setBio(json.player.bio || "");
-
-    setFavoriteGame(
-      json.player.favoriteGame || ""
-    );
-
-    setBannerUrl(
-      json.player.bannerUrl || ""
-    );
-const provider =
-  getProvider(platform);
-
-if (provider) {
-  const profile =
-    await provider.searchPlayer(
-      username
-    );
-
-  setProviderProfile(profile);
-
-  const providerMatches =
-    await provider.getMatches(
-      username
-    );
-
-  setLiveMatches(
-    providerMatches || []
-  );
-}
-    setLoading(false);
   }
 
   async function saveProfile() {
@@ -231,8 +219,7 @@ if (provider) {
     );
 
     if (!res.ok) {
-      alert("Failed to add match");
-
+      toast.error("Failed to add match");
       return;
     }
 
@@ -278,19 +265,16 @@ if (provider) {
   // NOT FOUND
   if (notFound) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center px-6">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center px-4 sm:px-6">
         <div className="max-w-[700px] text-center">
-          <div className="text-8xl mb-6">
-            🎮
-          </div>
+          <div className="text-5xl sm:text-8xl mb-6">🎮</div>
 
-          <h1 className="text-6xl font-black">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black">
             Player Not Found
           </h1>
 
-          <p className="45 text-xl mt-6 leading-relaxed">
-            This player profile does not
-            exist yet on the platform.
+          <p className="text-white/45 text-base sm:text-xl mt-4 sm:mt-6 leading-relaxed">
+            This player profile does not exist yet on the platform.
           </p>
         </div>
       </div>
@@ -409,7 +393,6 @@ const displayedMatches =
 
                 <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black leading-none break-words">
                   {providerProfile?.username ||
-  riotData?.gameName ||
   player.username}
                 </h1>
 
@@ -461,14 +444,13 @@ const displayedMatches =
             </div>
 
             {/* RIGHT */}
-<div className="min-w-[340px]">
+<div className="w-full xl:min-w-[340px]">
   {/* SOCIAL ACTIONS */}
-  <div className="flex gap-4 mb-5">
+  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-5">
     <button
   onClick={async () => {
     if (!session?.user?.username) {
-      alert("Please login first");
-
+      toast.error("Please log in first");
       return;
     }
 
@@ -496,17 +478,14 @@ const displayedMatches =
       await res.json();
 
     if (!res.ok) {
-      alert(
+      toast.error(
         data.error ||
           "Failed to send request"
       );
-
       return;
     }
 
-    alert(
-      "Friend request sent!"
-    );
+    toast.success("Friend request sent!");
   }}
   className="
     flex-1
@@ -549,15 +528,15 @@ const displayedMatches =
                   rounded-[20px]
                   border
                   border-white/[0.04]
-                  from-[#18181b]
-                  p-6
+                  bg-[#161616]
+                  p-4 sm:p-6
                 "
               >
                 <div className="text-white/40 text-sm uppercase tracking-[3px]">
                   KD Ratio
                 </div>
 
-                <div className="text-5xl font-black mt-3">
+                <div className="text-3xl sm:text-5xl font-black mt-3">
                   {player.kd}
                 </div>
               </div>
@@ -567,15 +546,15 @@ const displayedMatches =
                   rounded-[20px]
                   border
                   border-white/[0.04]
-                  from-[#18181b]
-                  p-6
+                  bg-[#161616]
+                  p-4 sm:p-6
                 "
               >
                 <div className="text-white/40 text-sm uppercase tracking-[3px]">
                   Win Rate
                 </div>
 
-                <div className="text-5xl font-black mt-3 text-white">
+                <div className="text-3xl sm:text-5xl font-black mt-3 text-white">
                   {player.winrate}%
                 </div>
               </div>
@@ -585,15 +564,15 @@ const displayedMatches =
                   rounded-[20px]
                   border
                   border-white/[0.04]
-                  from-[#18181b]
-                  p-6
+                  bg-[#161616]
+                  p-4 sm:p-6
                 "
               >
                 <div className="text-white/40 text-sm uppercase tracking-[3px]">
                   Matches
                 </div>
 
-                <div className="text-5xl font-black mt-3">
+                <div className="text-3xl sm:text-5xl font-black mt-3">
                   {player.matches || 0}
                 </div>
               </div>
@@ -603,15 +582,15 @@ const displayedMatches =
                   rounded-[20px]
                   border
                   border-white/[0.04]
-                  from-[#18181b]
-                  p-6
+                  bg-[#161616]
+                  p-4 sm:p-6
                 "
               >
                 <div className="text-white/40 text-sm uppercase tracking-[3px]">
                   Accuracy
                 </div>
 
-                <div className="text-5xl font-black mt-3 text-slate-300">
+                <div className="text-3xl sm:text-5xl font-black mt-3 text-slate-300">
                   {player.accuracy || 92}%
                 </div>
               </div>
@@ -627,7 +606,7 @@ const displayedMatches =
     border
     border-white/[0.04]
     bg-black
-    p-8
+    p-5 sm:p-8
   "
 >
   <div>
@@ -635,7 +614,7 @@ const displayedMatches =
       Progression
     </div>
 
-    <h2 className="text-4xl font-black mt-3">
+    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black mt-3">
       Achievements
     </h2>
   </div>
@@ -676,7 +655,7 @@ const displayedMatches =
   </div>
 </div>
       {/* EXTRA PLAYER INFO */}
-<div className="mt-8 grid grid-cols-2 xl:grid-cols-4 gap-5">
+<div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
   {[
     {
   label: "Peak Rank",
@@ -736,16 +715,16 @@ const displayedMatches =
     border
     border-white/[0.04]
     bg-black
-    p-8
+    p-5 sm:p-8
   "
 >
-  <div className="flex items-center justify-between mb-8">
+  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
     <div>
       <div className="uppercase tracking-[4px] text-white/40 text-sm">
         Competitive History
       </div>
 
-      <h2 className="text-4xl font-black mt-3">
+      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black mt-3">
         Recent Matches
       </h2>
     </div>

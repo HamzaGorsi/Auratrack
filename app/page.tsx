@@ -529,7 +529,7 @@ if (platform === "RIOT") {
       {item.label}
     </div>
 
-    <div className="text-3xl font-black mt-3">
+    <div className="text-2xl sm:text-3xl font-black mt-3">
       {item.value}
     </div>
   </div>
@@ -730,9 +730,9 @@ if (platform === "RIOT") {
                 ].map((news) => (
                   <div
                     key={news.title}
-                    className="rounded-[20px] border border-white/[0.04] from-[#18181b] p-6"
+                    className="rounded-[20px] border border-white/[0.04] bg-[#161616] p-5 sm:p-6"
                   >
-                    <div className="text-2xl font-black leading-snug">
+                    <div className="text-lg sm:text-2xl font-black leading-snug">
                       {news.title}
                     </div>
 
@@ -745,7 +745,7 @@ if (platform === "RIOT") {
             </div>
 
             <div className="min-h-0 xl:min-h-[760px] rounded-[20px] border border-white/[0.04] bg-[#111111] p-5 sm:p-8">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6 sm:mb-8">
                 <div>
                   <div className="uppercase tracking-[4px] text-white/40 text-sm">
                     Competitive Events
@@ -754,22 +754,10 @@ if (platform === "RIOT") {
                   <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black mt-3">
                     Tournaments
                   </h2>
-                  <div
-  className="
-  h-11
-  px-4
-  rounded-2xl
-  bg-white/[0.04]
-  text-green-400
-  font-bold
-  inline-flex
-  items-center
-  justify-center
-  synced-pulse
-"
->
-  ONGOING / UPCOMING
-</div>
+                </div>
+
+                <div className="h-11 px-4 rounded-2xl bg-white/[0.04] text-green-400 font-bold inline-flex items-center justify-center synced-pulse whitespace-nowrap">
+                  ONGOING / UPCOMING
                 </div>
               </div>
 
@@ -802,7 +790,7 @@ if (platform === "RIOT") {
                 ].map((tournament) => (
                   <div
                     key={tournament.name}
-                    className="rounded-2xl border border-white/[0.04] from-[#18181b] p-4"
+                    className="rounded-2xl border border-white/[0.04] bg-[#161616] p-4"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                       <div className="min-w-0">

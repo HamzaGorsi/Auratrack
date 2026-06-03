@@ -1,10 +1,9 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-
 import { useRouter } from "next/navigation";
-
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,7 +30,7 @@ rememberMe,
     if (res?.ok) {
       router.push("/");
     } else {
-      alert("Invalid login");
+      toast.error("Invalid email or password");
     }
   }
 
@@ -85,9 +84,9 @@ rememberMe,
   border
   border-white/[0.08]
   bg-black
-  p-10
+  p-6 sm:p-10
 ">
-        <h1 className="text-6xl font-black tracking-tight">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight">
   Welcome Back!
 </h1>
 <div className="mt-4 text-white/45 leading-7">

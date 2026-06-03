@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -36,9 +36,11 @@ export default function RegisterPage() {
     );
 
     if (res.ok) {
+      toast.success("Account created! Please log in.");
       router.push("/login");
     } else {
-      alert("Registration failed");
+      const data = await res.json().catch(() => null);
+      toast.error(data?.error || "Registration failed");
     }
   }
 
@@ -92,7 +94,7 @@ export default function RegisterPage() {
   border
   border-white/[0.08]
   bg-black  
-  p-10
+  p-6 sm:p-10
 ">
         <h1 className="text-5xl font-black">
           Create Account

@@ -8,7 +8,7 @@ import { useSession, signOut } from "next-auth/react";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/leaderboard", label: "Leaderboard" },
-  { href: "/social", label: "Social" },
+  { href: "/friends", label: "Social" },
 ];
 
 function navLinkClass(pathname: string, href: string) {
