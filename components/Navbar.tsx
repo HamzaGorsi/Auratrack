@@ -17,7 +17,7 @@ function navLinkClass(pathname: string, href: string) {
     h-11 px-6 rounded-xl flex items-center transition-all duration-200
     ${
       active
-        ? "bg-white/[0.06] text-white shadow-[0_0_20px_rgba(255,255,255,0.06)]"
+        ? "bg-violet-500/10 text-white border border-violet-400/10"
         : "text-white/65 hover:text-white hover:bg-white/[0.04]"
     }
   `;
@@ -59,20 +59,22 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <header className="w-full px-4 sm:px-6 pt-4 sm:pt-5">
+    <header className="relative z-[999] w-full px-4 sm:px-6 pt-4 sm:pt-5">
       <div
-        ref={mobileRef}
-        className="
-          w-full
-          min-h-[72px] sm:min-h-24
-          rounded-[20px]
-          border border-white/[0.04]
-          bg-white/[0.05]
-backdrop-blur-3xl
-          flex flex-col
-          relative
-        "
-      >
+  ref={mobileRef}
+  className="
+    w-full
+    min-h-[72px] sm:min-h-24
+    rounded-[20px]
+    border border-white/[0.04]
+    bg-white/[0.05]
+    backdrop-blur-3xl
+    flex flex-col
+    relative
+    z-[999]
+    overflow-visible
+  "
+>
         <div className="flex items-center justify-between px-4 md:px-8 py-3 sm:py-0 sm:min-h-24">
           {/* LEFT */}
           <div className="flex items-center gap-4 sm:gap-8 md:gap-12 min-w-0">
@@ -154,11 +156,11 @@ backdrop-blur-xl p-2
   className="
     relative
     rounded-[28px]
-    bg-cyan-500/15
+bg-violet-500/10
+border-violet-400/20
+hover:bg-violet-500/15
     backdrop-blur-xl
     border
-    border-cyan-400/20
-    hover:bg-cyan-500/20
     transition-all
     duration-300
   "
@@ -176,8 +178,8 @@ backdrop-blur-xl p-2
                 >
                   <div
                     className="
-                      w-8 h-8 rounded-xl bg-cyan-400/10
-                      border border-cyan-400/10
+                      w-8 h-8 rounded-xl bg-violet-500/10
+                      border border-violet-400/10
                       flex items-center justify-center
                       text-sm font-black flex-shrink-0
                     "
@@ -226,7 +228,7 @@ backdrop-blur-xl p-2
                       href="/profile"
                       className="
                         h-12 px-5 flex items-center text-white/80
-                        hover:bg-cyan-500/10 transition-all
+                        hover:bg-violet-500/10 transition-all
                       "
                     >
                       Profile
@@ -236,7 +238,7 @@ backdrop-blur-xl p-2
                       href="/settings"
                       className="
                         h-12 px-5 flex items-center text-white/80
-                        hover:bg-cyan-500/10 transition-all
+                        hover:bg-violet-500/10 transition-all
                       "
                     >
                       Settings
@@ -269,7 +271,7 @@ backdrop-blur-xl p-2
 
   rounded-2xl
 
-  bg-white/[0.06]
+  bg-violet-500/12
   backdrop-blur-xl
 
   border
@@ -281,7 +283,7 @@ backdrop-blur-xl p-2
   font-semibold
   text-white
 
-  hover:border-white/[0.18]
+  hover:border-violet-400/20
 
   transition-all
   duration-300
