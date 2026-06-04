@@ -11,15 +11,14 @@ export async function henrikFetch(
   const apiKey = getHenrikKey();
   const url = new URL(`${HENRIK_BASE}${path}`);
 
-  if (apiKey) {
-    url.searchParams.set("api_key", apiKey);
-  }
-
   const headers = new Headers(init?.headers);
 
-  if (apiKey) {
-    headers.set("Authorization", apiKey);
-  }
+if (apiKey) {
+  headers.set(
+    "Authorization",
+    `Bearer ${apiKey}`
+  );
+}
 
   return fetch(url.toString(), {
     ...init,
