@@ -18,7 +18,7 @@ function navLinkClass(pathname: string, href: string) {
     ${
       active
         ? "bg-violet-500/10 text-white border border-violet-400/10"
-        : "text-white/65 hover:text-white hover:bg-white/[0.04]"
+        : "text-white/65 hover:text-white"
     }
   `;
 }
@@ -156,11 +156,13 @@ backdrop-blur-xl p-2
   className="
     relative
     rounded-[28px]
-bg-violet-500/10
-border-violet-400/20
-hover:bg-violet-500/15
+
+    bg-violet-500/10
+    border-violet-400/20
+
     backdrop-blur-xl
     border
+
     transition-all
     duration-300
   "
@@ -299,7 +301,7 @@ hover:bg-violet-500/15
                     bg-violet-500/20
 backdrop-blur-xl
 border border-violet-400/20
-hover:bg-violet-500/30
+hover:border-violet-300/40
                     flex items-center justify-center font-black text-white
                     hover:brightness-110 transition-all duration-300
                     shadow-[0_0_20px_rgba(99,102,241,0.25)] text-sm sm:text-base
