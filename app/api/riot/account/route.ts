@@ -30,11 +30,24 @@ const gameName = searchParams.get("gameName");
     );
 
     if (!response.ok) {
-      return NextResponse.json(
-        { error: "Player not found" },
-        { status: 404 }
-      );
+  const errorText = await response.text();
+
+  console.error(
+    "RIOT ACCOUNT ERROR:",
+    response.status,
+    errorText
+  );
+
+  return NextResponse.json(
+    {
+      error: errorText,
+      status: response.status,
+    },
+    {
+      status: response.status,
     }
+  );
+}
 
     const data = await response.json();
      return NextResponse.json(data);

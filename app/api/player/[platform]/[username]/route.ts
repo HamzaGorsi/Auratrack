@@ -90,15 +90,17 @@ async function loadRiotValorantProfile(
       { status: 400 }
     );
   }
+
   if (!process.env.HENRIK_API_KEY) {
-  return Response.json(
-    {
-      error:
-        "HENRIK_API_KEY is not configured. Add it in Vercel environment variables.",
-    },
-    { status: 503 }
-  );
-}
+    return Response.json(
+      {
+        error:
+          "HENRIK_API_KEY is not configured. Add it in Vercel environment variables.",
+      },
+      { status: 503 }
+    );
+  }
+
   const encodedName = encodeURIComponent(gameName);
   const encodedTag = encodeURIComponent(tagLine);
 
