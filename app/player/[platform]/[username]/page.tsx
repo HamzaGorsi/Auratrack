@@ -353,8 +353,7 @@ const displayedMatches =
           mb-8
         "
       >
-        {/* BACKGROUND GLOW */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#18181b]/10 via-transparent to-black/10" />
+        
 
         <div className="relative z-10">
           <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-8">
@@ -514,7 +513,7 @@ player.rank ||
         bg-white/[0.03]
         font-bold
         text-white/80
-        hover:bg-white/[0.14]
+        hover:border-white/[0.14]
         transition-all
         duration-300
       "
@@ -529,7 +528,8 @@ player.rank ||
                   rounded-[20px]
                   border
                   border-white/[0.04]
-                  bg-[#161616]
+                  bg-white/[0.03]
+backdrop-blur-xl
                   p-4 sm:p-6
                 "
               >
@@ -547,7 +547,8 @@ player.rank ||
                   rounded-[20px]
                   border
                   border-white/[0.04]
-                  bg-[#161616]
+                  bg-white/[0.03]
+backdrop-blur-xl
                   p-4 sm:p-6
                 "
               >
@@ -565,7 +566,8 @@ player.rank ||
                   rounded-[20px]
                   border
                   border-white/[0.04]
-                  bg-[#161616]
+                  bg-white/[0.03]
+backdrop-blur-xl
                   p-4 sm:p-6
                 "
               >
@@ -583,7 +585,8 @@ player.rank ||
                   rounded-[20px]
                   border
                   border-white/[0.04]
-                  bg-[#161616]
+                  bg-white/[0.03]
+backdrop-blur-xl
                   p-4 sm:p-6
                 "
               >
