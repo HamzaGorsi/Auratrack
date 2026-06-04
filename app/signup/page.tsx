@@ -157,7 +157,7 @@ export default function RegisterPage() {
   h-11
   px-6
   rounded-2xl
-  bg-[#1f1f23]
+  bg-black/80
   text-white
   font-black
   border
@@ -175,20 +175,19 @@ export default function RegisterPage() {
           <button
             onClick={register}
             className="
-  h-11
-  px-6
-  rounded-2xl
-  bg-violet-500/20
+h-11
+px-6
+rounded-2xl
+bg-violet-500/20
+backdrop-blur-xl
+border
 border-violet-400/20
 text-white
-backdrop-blur-xl
-  text-black
-  font-black
-  border
-  border-white/[0.08]
-  transition-colors
-  duration-200
-  hover:bg-[#e4e4e7]
+font-black
+transition-all
+duration-300
+hover:bg-violet-500/30
+hover:scale-[1.02]
 "
           >
             CREATE ACCOUNT

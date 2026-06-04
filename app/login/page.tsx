@@ -38,29 +38,9 @@ rememberMe,
     <div className="min-h-screen bg-black text-white flex items-center justify-center px-6 relative overflow-hidden">
       {/* BACKGROUND */}
 <div className="absolute inset-0 overflow-hidden">
-  <div
-    className="
-      absolute
-      top-[-200px]
-      left-[-200px]
-      w-[600px]
-      h-[600px]
-      rounded-full
-      bg-violet-600/20
-    "
-  />
+  <div className="absolute top-[-250px] left-[-250px] w-[700px] h-[700px] rounded-full bg-violet-500/15 blur-[180px]" />
 
-  <div
-    className="
-      absolute
-      bottom-[-250px]
-      right-[-250px]
-      w-[600px]
-      h-[600px]
-      rounded-full
-      bg-cyan-600/20
-    "
-  />
+  <div className="absolute bottom-[-250px] right-[-250px] w-[700px] h-[700px] rounded-full bg-cyan-500/15 blur-[180px]" />
 
   <div
     className="
@@ -168,19 +148,19 @@ rememberMe,
           <button
             onClick={login}
             className="
-  h-11
-  px-6
-  rounded-2xl
-  bg-white/[0.08]
+h-11
+px-6
+rounded-2xl
+bg-white/[0.08]
 backdrop-blur-xl
-border border-white/[0.1]
-  border
-  border-white/[0.08]
-  text-white
-  font-bold
-  transition-all
-  duration-300
-  hover:bg-[#222222]
+border
+border-white/[0.1]
+text-white
+font-bold
+transition-all
+duration-300
+hover:bg-white/[0.12]
+hover:scale-[1.02]
 "
           >
             LOGIN

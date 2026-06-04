@@ -242,7 +242,9 @@ setTimeout(() => {
 }
   return (
   <PageWrapper>
-    <div className="min-h-screen bg-black text-white">
+    <div className="relative min-h-screen bg-black text-white overflow-hidden">
+     <div className="absolute top-[-250px] left-[-250px] w-[700px] h-[700px] rounded-full bg-violet-500/10 blur-[180px]" />
+<div className="absolute bottom-[-250px] right-[-250px] w-[700px] h-[700px] rounded-full bg-cyan-500/10 blur-[180px]" /> 
       <div className="relative z-10 w-full px-4 sm:px-6 pt-28 sm:pt-36 pb-12 sm:pb-16 overflow-x-hidden">
         {/* BACKGROUND GLOWS */}
 <div
