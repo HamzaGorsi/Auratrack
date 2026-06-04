@@ -67,8 +67,8 @@ export default function Navbar() {
     min-h-[72px] sm:min-h-24
     rounded-[20px]
     border border-white/[0.04]
-    bg-white/[0.05]
-    backdrop-blur-3xl
+    bg-white/[0.03]
+backdrop-blur-xl
     flex flex-col
     relative
     z-[999]
@@ -89,7 +89,6 @@ export default function Navbar() {
                   from-pink-500 via-[#1F2937] to-violet-600
                   flex items-center justify-center
                   font-black text-lg sm:text-xl
-                  shadow-[0_0_40px_rgba(168,85,247,0.45)]
                   flex-shrink-0
                 "
               >
@@ -108,13 +107,13 @@ export default function Navbar() {
 
             {/* DESKTOP NAV */}
             <nav
-              className="
-                hidden xl:flex items-center gap-10
-                rounded-2xl border border-white/[0.04]
-                bg-white/[0.03]
-backdrop-blur-xl p-2
-              "
-            >
+  className="
+    hidden xl:flex items-center gap-10
+    rounded-2xl border border-white/[0.04]
+    bg-black/20
+    p-2
+  "
+>
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -157,10 +156,8 @@ backdrop-blur-xl p-2
     relative
     rounded-[28px]
 
-    bg-violet-500/10
+    bg-violet-500/15
     border-violet-400/20
-
-    backdrop-blur-xl
     border
 
     transition-all

@@ -109,19 +109,27 @@ async function loadRiotValorantProfile(
   );
 
   if (!accountRes.ok) {
-    const errorBody = await accountRes
-      .json()
-      .catch(() => null);
+  const text = await accountRes.text();
 
-    return Response.json(
-      {
-        error:
-          errorBody?.errors?.[0]?.message ??
-          "Player not found",
-      },
-      { status: accountRes.status === 401 ? 503 : 404 }
-    );
-  }
+  console.log(
+    "HENRIK STATUS:",
+    accountRes.status
+  );
+
+  console.log(
+    "HENRIK RESPONSE:",
+    text
+  );
+
+  return Response.json(
+    {
+      error: text,
+    },
+    {
+      status: accountRes.status,
+    }
+  );
+}
 
   const accountJson = await accountRes.json();
   const account = accountJson?.data;
