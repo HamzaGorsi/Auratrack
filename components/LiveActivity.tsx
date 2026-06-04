@@ -44,7 +44,7 @@ export default function LiveActivity() {
         rounded-[20px]
         border
         border-white/[0.04]
-        bg-black
+        bg-white/[0.04] backdrop-blur-2xl
         p-5 sm:p-8
       "
     >
@@ -89,7 +89,8 @@ export default function LiveActivity() {
                 rounded-2xl
                 border
                 border-white/[0.04]
-                bg-[#161616]
+                bg-white/[0.03]
+backdrop-blur-xl
                 p-4 sm:p-5
                 hover:bg-white/[0.03]
                 transition-all
@@ -117,8 +118,8 @@ export default function LiveActivity() {
                     py-2
                     rounded-xl
                     bg-gradient-to-r
-                    from-[#18181b]
-                    to-black
+                    bg-violet-500/15
+border border-violet-400/20
                     text-sm
                     font-bold
                   "

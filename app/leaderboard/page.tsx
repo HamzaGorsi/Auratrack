@@ -25,7 +25,7 @@ export default function LeaderboardPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-blacktext-white">
+    <div className="min-h-screen bg-black text-white">
       {/* HERO */}
       <div className="border-b border-white/[0.04]">
         <div className="max-w-[1700px] mx-auto px-6 pt-36 pb-12">
@@ -45,7 +45,7 @@ export default function LeaderboardPage() {
             </div>
 
             <div className="hidden xl:flex items-center gap-5">
-              <div className="rounded-[20px] bg-white/[0.03] border border-white/[0.04] px-8 py-5">
+              <div className="rounded-[20px] bg-white/[0.03] backdrop-blur-xl border border-white/[0.04] px-8 py-5">
                 <div className="text-white/45 text-sm">
                   Total Players
                 </div>
@@ -55,7 +55,7 @@ export default function LeaderboardPage() {
                 </div>
               </div>
 
-              <div className="rounded-[20px] bg-white/[0.03] border border-white/[0.04] px-8 py-5">
+              <div className="rounded-[20px] bg-white/[0.03] backdrop-blur-2xl border border-white/[0.04] px-8 py-5">
                 <div className="text-white/45 text-sm">
                   Active Matches
                 </div>

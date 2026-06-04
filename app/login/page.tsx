@@ -46,7 +46,7 @@ rememberMe,
       w-[600px]
       h-[600px]
       rounded-full
-      bg-blue-900/20
+      bg-violet-600/20
     "
   />
 
@@ -58,7 +58,7 @@ rememberMe,
       w-[600px]
       h-[600px]
       rounded-full
-      bg-emerald-900/20
+      bg-cyan-600/20
     "
   />
 
@@ -83,7 +83,7 @@ rememberMe,
   rounded-[32px]
   border
   border-white/[0.08]
-  bg-black
+  bg-white/[0.04] backdrop-blur-3xl
   p-6 sm:p-10
 ">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight">
@@ -171,7 +171,9 @@ rememberMe,
   h-11
   px-6
   rounded-2xl
-  bg-[#1a1a1a]
+  bg-white/[0.08]
+backdrop-blur-xl
+border border-white/[0.1]
   border
   border-white/[0.08]
   text-white

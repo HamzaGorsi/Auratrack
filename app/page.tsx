@@ -274,7 +274,8 @@ if (platform === "RIOT") {
           </p>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-14 items-stretch">
-            <div className="min-h-0 xl:min-h-[760px] rounded-[20px] bg-[#0d0d0d] p-5 sm:p-8">
+            <div className="min-h-0 xl:min-h-[760px] rounded-[20px] bg-white/[0.04]
+backdrop-blur-3xl p-5 sm:p-8">
               <div>
                 <input
                   value={username}
@@ -389,7 +390,10 @@ if (platform === "RIOT") {
   w-full
   h-16
   rounded-2xl
-  bg-[#1a1a1a]
+  bg-violet-500/20
+border border-violet-400/20
+backdrop-blur-xl
+hover:bg-violet-500/30
   hover:bg-[#232323]
   transition-all
   duration-300

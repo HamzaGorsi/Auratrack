@@ -56,7 +56,7 @@ export default function RegisterPage() {
       w-[600px]
       h-[600px]
       rounded-full
-      bg-blue-900/20
+      bg-violet-600/20
     "
   />
 
@@ -68,7 +68,7 @@ export default function RegisterPage() {
       w-[600px]
       h-[600px]
       rounded-full
-      bg-emerald-900/20
+      bg-cyan-600/20
     "
   />
 
@@ -93,7 +93,7 @@ export default function RegisterPage() {
   rounded-[32px]
   border
   border-white/[0.08]
-  bg-black  
+  bg-white/[0.04] backdrop-blur-3xl  
   p-6 sm:p-10
 ">
         <h1 className="text-5xl font-black">
@@ -178,7 +178,10 @@ export default function RegisterPage() {
   h-11
   px-6
   rounded-2xl
-  bg-[#d4d4d8]
+  bg-violet-500/20
+border-violet-400/20
+text-white
+backdrop-blur-xl
   text-black
   font-black
   border

@@ -55,7 +55,8 @@ export default function FriendsPage() {
           </p>
         </div>
 
-        <div className="rounded-[20px] border border-white/[0.04] bg-[#111111] p-5 sm:p-8">
+        <div className="rounded-[20px] border border-white/[0.04] bg-white/[0.03]
+backdrop-blur-xl p-5 sm:p-8">
           <h2 className="text-2xl sm:text-3xl font-black mb-6">
             Send Friend Request
           </h2>
@@ -74,7 +75,10 @@ export default function FriendsPage() {
             <button
               type="button"
               onClick={sendRequest}
-              className="h-14 px-8 rounded-2xl bg-gradient-to-r from-[#18181b] to-black font-black whitespace-nowrap"
+              className="h-14 px-8 rounded-2xl bg-violet-500/20
+backdrop-blur-xl
+border border-violet-400/20
+hover:bg-violet-500/30 font-black whitespace-nowrap"
             >
               SEND
             </button>

@@ -67,7 +67,8 @@ export default function Navbar() {
           min-h-[72px] sm:min-h-24
           rounded-[20px]
           border border-white/[0.04]
-          bg-[#161616]
+          bg-white/[0.04]
+backdrop-blur-2xl
           flex flex-col
           relative
         "
@@ -141,7 +142,10 @@ export default function Navbar() {
 
             {status === "loading" ? null : session ? (
               <div
-                className="relative rounded-[28px] bg-gradient-to-r from-[#18181b] to-black"
+                className="relative rounded-[28px] bg-violet-500/20
+backdrop-blur-xl
+border border-violet-400/20
+hover:bg-violet-500/30"
                 ref={profileRef}
               >
                 <button
@@ -247,7 +251,9 @@ export default function Navbar() {
                   href="/signup"
                   className="
                     h-11 sm:h-12 px-4 sm:px-7 rounded-2xl
-                    bg-gradient-to-r from-[#18181b] to-black
+                    bg-white/[0.05]
+backdrop-blur-xl
+border border-white/[0.08]
                     flex items-center justify-center font-black text-white
                     hover:brightness-110 transition-all duration-300
                     shadow-[0_0_20px_rgba(99,102,241,0.25)] text-sm sm:text-base

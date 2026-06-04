@@ -31,7 +31,7 @@ export default function TrendingPlayers() {
         rounded-[32px]
         border
         border-white/[0.04]
-        bg-black
+        bg-white/[0.04] backdrop-blur-2xl
         p-5 sm:p-8
       "
     >
@@ -73,7 +73,8 @@ export default function TrendingPlayers() {
               rounded-[28px]
               border
               border-white/[0.04]
-              bg-black/80
+              bg-white/[0.03]
+backdrop-blur-xl
               p-5
               transition-all
               duration-300
@@ -103,8 +104,8 @@ export default function TrendingPlayers() {
                     h-14
                     rounded-2xl
                     bg-gradient-to-br
-                    from-[#18181b]
-                    to-black
+                    from-violet-500/30
+to-cyan-500/30
                     flex
                     items-center
                     justify-center

@@ -299,7 +299,9 @@ setTimeout(() => {
             rounded-[32px]
             border
             border-white/[0.08]
-            bg-black
+            bg-white/[0.06]
+backdrop-blur-3xl
+shadow-[0_8px_40px_rgba(255,255,255,0.03)]
             p-5 sm:p-8
           "
         >
@@ -313,8 +315,8 @@ setTimeout(() => {
       rounded-[20px]
       overflow-hidden
       bg-gradient-to-br
-      from-[#18181b]
-      to-black
+      from-violet-500/30
+to-cyan-500/30
       flex
       items-center
       justify-center
@@ -361,11 +363,13 @@ setTimeout(() => {
     h-12 sm:h-14
     px-6 sm:px-8
     rounded-2xl
-    bg-gradient-to-r
-    from-[#18181b]
-    to-black
+    bg-violet-500/20
+border
+border-violet-400/20
+backdrop-blur-xl
     font-black
-    hover:brightness-110
+    hover:bg-violet-500/30
+hover:scale-[1.02]
     transition-all
     duration-300
   "
@@ -383,8 +387,7 @@ setTimeout(() => {
       rounded-[32px]
       border
       border-white/[0.08]
-      bg-black
-      bg-black
+      bg-white/[0.04] backdrop-blur-3xl
       p-5 sm:p-8
     "
   >
@@ -528,10 +531,10 @@ setTimeout(() => {
     duration-300
     ${
       saving
-  ? "bg-emerald-500 scale-95 opacity-80"
+  ? "bg-emerald-500/20 border border-emerald-400/20 backdrop-blur-xl scale-95 opacity-80"
   : saved
-  ? "bg-emerald-500 scale-[1.02]"
-  : "bg-gradient-to-r from-[#18181b] to-black hover:scale-[1.02]"
+  ? "bg-emerald-500/20 border border-emerald-400/20 backdrop-blur-xl scale-[1.02]"
+  : "bg-violet-500/20 border border-violet-400/20 backdrop-blur-xl hover:bg-violet-500/30 hover:scale-[1.02]"
     }
   `}
 >
@@ -569,12 +572,14 @@ setTimeout(() => {
   rounded-[20px]
   border
   border-white/[0.08]
-  bg-black
+  bg-white/[0.05]
+backdrop-blur-xl
+shadow-[0_4px_20px_rgba(255,255,255,0.02)]
   p-6
   transition-all
   duration-300
   hover:-translate-y-1
-  hover:border-white/[0.08]
+  hover:border-white/[0.18]
   hover:shadow-[0_0_30px_rgba(99,102,241,0.12)]
 "
             >
@@ -598,7 +603,9 @@ setTimeout(() => {
               rounded-[32px]
               border
               border-white/[0.08]
-              bg-black
+              bg-white/[0.05]
+backdrop-blur-2xl
+shadow-[0_8px_30px_rgba(255,255,255,0.02)]
               p-5 sm:p-8
             "
           >
@@ -647,7 +654,11 @@ platform.key
           rounded-2xl
           border
           border-white/[0.08]
-          bg-[#111111]
+          bg-white/[0.04]
+backdrop-blur-3xl
+hover:border-white/[0.14]
+transition-all
+duration-300
           px-4 sm:px-6
           py-4
           flex
@@ -767,10 +778,12 @@ platform.key
               h-10
               px-5
               rounded-xl
-              bg-gradient-to-r
-              from-[#18181b]
-              to-black
-              hover:brightness-110
+              bg-violet-500/20
+border
+border-violet-400/20
+backdrop-blur-xl
+hover:bg-violet-500/30
+hover:scale-[1.02]
               text-sm
               font-bold
               transition-all
@@ -793,7 +806,9 @@ platform.key
               rounded-[32px]
               border
               border-white/[0.08]
-              bg-black
+              bg-white/[0.05]
+backdrop-blur-2xl
+shadow-[0_8px_30px_rgba(255,255,255,0.02)]
               p-5 sm:p-8
             "
           >
@@ -820,24 +835,25 @@ platform.key
   },
 ].map((game, i) => (
   <div
-    key={i}
-    className="
-      h-16
-      rounded-2xl
-      border
-      border-white/[0.08]
-      bg-white/[0.02]
-      px-5
-      flex
-      items-center
-      justify-between
-      text-white/70
-      transition-all
-      duration-300
-      hover:border-white/[0.08]
-      hover:bg-white/[0.03]
-    "
-  >
+  key={i}
+  className="
+    h-16
+    rounded-2xl
+    border
+    border-white/[0.08]
+    bg-white/[0.03]
+    backdrop-blur-xl
+    px-5
+    flex
+    items-center
+    justify-between
+    text-white/70
+    transition-all
+    duration-300
+    hover:border-white/[0.18]
+    hover:bg-white/[0.05]
+  "
+>
     <div>
       {game.game}
     </div>
@@ -874,7 +890,7 @@ platform.key
         rounded-[32px]
         border
         border-white/[0.08]
-        bg-[#050505]
+        bg-white/[0.04] backdrop-blur-3xl
         p-5 sm:p-8
       "
     >
@@ -958,11 +974,13 @@ platform.key
           w-full
           h-14
           rounded-2xl
-          bg-gradient-to-r
-          from-[#18181b]
-          to-black
+          bg-violet-500/20
+border
+border-violet-400/20
+backdrop-blur-xl
+hover:bg-violet-500/30
           font-black
-          hover:brightness-110
+hover:scale-[1.02]
           transition-all
           duration-300
         "

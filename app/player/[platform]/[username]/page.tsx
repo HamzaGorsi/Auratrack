@@ -348,7 +348,7 @@ const displayedMatches =
           rounded-[32px]
           border
           border-white/[0.04]
-          bg-black
+          liquid-glass
           p-5 sm:p-8
           mb-8
         "
@@ -423,10 +423,11 @@ const displayedMatches =
                       font-bold
                     "
                   >
-                    Current Rank
-                    {providerProfile?.rank ||
-  player.rank ||
-  "Unranked"}
+                    Current Rank:
+{" "}
+{providerProfile?.rank ||
+player.rank ||
+"Unranked"}
 
 {providerProfile?.level
   ? ` • ${providerProfile.level} RR`
