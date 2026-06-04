@@ -332,7 +332,7 @@ backdrop-blur-3xl p-5 sm:p-8">
   type="button"
   key={item.name}
   onClick={() => setPlatform(item.name)}
-                      className={`min-h-[56px] rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-[1.03] border border-white/[0.04] ${
+                      className={`min-h-[56px] rounded-xl flex items-center justify-center transition-all duration-300 hover:bg-white/[0.08] hover:border-white/[0.18] border border-white/[0.04] ${
   item.name === "EPIC"
     ? platform === item.name
       ? "bg-white text-black"
@@ -441,7 +441,8 @@ hover:bg-violet-500/30
   border
   transition-all
   duration-300
-  hover:scale-[1.03]
+  hover:bg-white/[0.08]
+hover:border-white/[0.18]
 
   ${
     search.platform === "RIOT"

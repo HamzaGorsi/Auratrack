@@ -76,8 +76,8 @@ export default function ActivityFeed() {
   p-5
   transition-all
   duration-300
-  hover:scale-[1.01]
-  hover:border-white/15
+  hover:bg-white/[0.05]
+hover:border-white/[0.18]
 "
           >
             <div

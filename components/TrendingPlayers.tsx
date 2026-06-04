@@ -78,8 +78,8 @@ backdrop-blur-xl
               p-5
               transition-all
               duration-300
-              hover:scale-[1.02]
-              hover:border-white/15
+              hover:bg-white/[0.05]
+hover:border-white/[0.18]
             "
           >
             <div

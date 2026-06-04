@@ -580,7 +580,6 @@ shadow-[0_4px_20px_rgba(255,255,255,0.02)]
   p-6
   transition-all
   duration-300
-  hover:-translate-y-1
   hover:border-white/[0.18]
   hover:shadow-[0_0_30px_rgba(99,102,241,0.12)]
 "
