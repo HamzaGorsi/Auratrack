@@ -67,8 +67,8 @@ export default function Navbar() {
           min-h-[72px] sm:min-h-24
           rounded-[20px]
           border border-white/[0.04]
-          bg-white/[0.04]
-backdrop-blur-2xl
+          bg-white/[0.05]
+backdrop-blur-3xl
           flex flex-col
           relative
         "
@@ -87,7 +87,7 @@ backdrop-blur-2xl
                   from-pink-500 via-[#1F2937] to-violet-600
                   flex items-center justify-center
                   font-black text-lg sm:text-xl
-                  shadow-[0_0_30px_rgba(168,85,247,0.5)]
+                  shadow-[0_0_40px_rgba(168,85,247,0.45)]
                   flex-shrink-0
                 "
               >
@@ -109,7 +109,8 @@ backdrop-blur-2xl
               className="
                 hidden xl:flex items-center gap-10
                 rounded-2xl border border-white/[0.04]
-                bg-white/[0.02] p-2
+                bg-white/[0.03]
+backdrop-blur-xl p-2
               "
             >
               {navLinks.map((link) => (
@@ -238,7 +239,8 @@ hover:bg-violet-500/30"
                   href="/login"
                   className="
                     hidden sm:flex h-12 min-w-[90px] px-5 sm:px-6
-                    rounded-2xl border border-white/[0.08] bg-black/80
+                    rounded-2xl border border-white/[0.08] bg-white/[0.03]
+backdrop-blur-xl
                     items-center justify-center font-semibold
                     text-white/75 hover:text-white hover:bg-white/[0.03]
                     transition-all duration-300
@@ -251,9 +253,10 @@ hover:bg-violet-500/30"
                   href="/signup"
                   className="
                     h-11 sm:h-12 px-4 sm:px-7 rounded-2xl
-                    bg-white/[0.05]
+                    bg-violet-500/20
 backdrop-blur-xl
-border border-white/[0.08]
+border border-violet-400/20
+hover:bg-violet-500/30
                     flex items-center justify-center font-black text-white
                     hover:brightness-110 transition-all duration-300
                     shadow-[0_0_20px_rgba(99,102,241,0.25)] text-sm sm:text-base
