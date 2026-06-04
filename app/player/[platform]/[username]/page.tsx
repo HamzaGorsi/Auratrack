@@ -514,7 +514,7 @@ player.rank ||
         bg-white/[0.03]
         font-bold
         text-white/80
-        hover:bg-white/[0.05]
+        hover:bg-white/[0.14]
         transition-all
         duration-300
       "
