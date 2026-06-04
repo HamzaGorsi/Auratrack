@@ -65,7 +65,30 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={handleSave}
-                className="w-full sm:w-auto h-14 px-8 rounded-2xl bg-gradient-to-r from-[#18181b] to-black font-black hover:brightness-110 transition-all duration-200"
+                className="
+w-full
+sm:w-auto
+h-14
+px-8
+rounded-2xl
+
+bg-gradient-to-r
+from-violet-600/30
+to-cyan-500/20
+
+border
+border-violet-400/30
+
+backdrop-blur-xl
+
+text-white
+font-black
+
+hover:border-violet-300/50
+
+transition-all
+duration-300
+"
               >
                 Save Changes
               </button>
@@ -90,7 +113,7 @@ export default function SettingsPage() {
                     onClick={() =>
                       toast.info(`${label} — coming soon`)
                     }
-                    className="w-full h-14 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-left px-5 hover:bg-white/[0.05] transition-all"
+                    className="w-full h-14 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-left px-5 hover:border-violet-400/30 transition-all"
                   >
                     {label}
                   </button>
@@ -114,7 +137,7 @@ export default function SettingsPage() {
                 onClick={() =>
                   toast.info("Password change — coming soon")
                 }
-                className="h-14 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-left px-5 hover:bg-white/[0.05] transition-all"
+                className="h-14 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-left px-5 hover:border-violet-400/30 transition-all"
               >
                 Change Password
               </button>

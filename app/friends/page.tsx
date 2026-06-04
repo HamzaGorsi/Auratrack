@@ -75,10 +75,30 @@ backdrop-blur-xl p-5 sm:p-8">
             <button
               type="button"
               onClick={sendRequest}
-              className="h-14 px-8 rounded-2xl bg-violet-500/20
+              className="
+h-14
+px-8
+rounded-2xl
+
+bg-gradient-to-r
+from-violet-600/30
+to-cyan-500/20
+
+border
+border-violet-400/30
+
 backdrop-blur-xl
-border border-violet-400/20
-hover:bg-violet-500/30 font-black whitespace-nowrap"
+
+text-white
+font-black
+
+hover:border-violet-300/50
+
+transition-all
+duration-300
+
+whitespace-nowrap
+"
             >
               SEND
             </button>

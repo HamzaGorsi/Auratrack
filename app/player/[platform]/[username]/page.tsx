@@ -488,35 +488,54 @@ player.rank ||
     toast.success("Friend request sent!");
   }}
   className="
-    flex-1
-    h-14
-    rounded-2xl
-    bg-gradient-to-r
-    from-[#18181b]
-    to-black
-    font-black
-    hover:scale-[1.02]
-    transition-all
-    duration-300
-  "
+flex-1
+h-14
+rounded-2xl
+
+bg-gradient-to-r
+from-violet-600/30
+to-cyan-500/20
+
+border
+border-violet-400/30
+
+backdrop-blur-xl
+
+text-white
+font-black
+
+hover:border-violet-300/50
+
+transition-all
+duration-300
+"
 >
   Add Friend
 </button>
 
     <button
       className="
-        flex-1
-        h-14
-        rounded-2xl
-        border
-        border-white/[0.08]
-        bg-white/[0.03]
-        font-bold
-        text-white/80
-        hover:border-white/[0.14]
-        transition-all
-        duration-300
-      "
+flex-1
+h-14
+rounded-2xl
+
+bg-gradient-to-r
+from-violet-600/30
+to-cyan-500/20
+
+border
+border-violet-400/30
+
+backdrop-blur-xl
+
+text-white
+font-black
+
+hover:border-violet-300/50
+
+transition-all
+duration-300
+"
     >
       Follow
     </button>

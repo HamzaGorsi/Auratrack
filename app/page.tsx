@@ -30,6 +30,29 @@ const [searchError, setSearchError] =
   const [username, setUsername] = useState("");
   const [platform, setPlatform] = useState("EPIC");
   const router = useRouter();
+  async function deleteSearch(
+  id: string
+) {
+  try {
+    const res = await fetch(
+      `/api/recent-searches/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!res.ok) return;
+
+    setRecentSearches((prev) =>
+      prev.filter(
+        (search) =>
+          search.id !== id
+      )
+    );
+  } catch (error) {
+    console.error(error);
+  }
+}
  const [connectedAccounts, setConnectedAccounts] =
   useState<any[]>([]);
 const [leaderboardPlayers, setLeaderboardPlayers] =
@@ -332,7 +355,20 @@ backdrop-blur-3xl p-5 sm:p-8">
   type="button"
   key={item.name}
   onClick={() => setPlatform(item.name)}
-                      className={`min-h-[56px] rounded-xl flex items-center justify-center transition-all duration-300 hover:bg-white/[0.08] hover:border-white/[0.18] border border-white/[0.04] ${
+className={`
+min-h-[56px]
+rounded-xl
+flex
+items-center
+justify-center
+
+transition-all
+duration-300
+
+border
+border-white/[0.04]
+
+${
   item.name === "EPIC"
     ? platform === item.name
       ? "bg-white text-black"
@@ -374,7 +410,8 @@ backdrop-blur-3xl p-5 sm:p-8">
       : "bg-violet-700/20 text-white hover:bg-violet-700/35"
 
     : "bg-white/[0.03] text-white/60 hover:text-white hover:bg-white/[0.06]"
-}`}
+}
+`}
                     >
                       {item.icon}
                     </button>
@@ -385,24 +422,33 @@ backdrop-blur-3xl p-5 sm:p-8">
   type="button"
   disabled={searchLoading}
   onClick={searchPlayer}
-                  className="
+  className="
   mt-5
   w-full
   h-16
   rounded-2xl
-  bg-violet-500/20
-border border-violet-400/20
-backdrop-blur-xl
-hover:bg-violet-500/30
-  hover:bg-[#232323]
+
+  bg-gradient-to-r
+  from-violet-600/30
+  to-cyan-500/20
+
+  border
+  border-violet-400/30
+
+  backdrop-blur-xl
+
+  hover:border-violet-300/50
+
   transition-all
   duration-300
+
   font-black
   text-lg
+
   disabled:opacity-50
   disabled:cursor-not-allowed
 "
-                >
+>
                   {searchLoading
   ? "SEARCHING..."
   : "SEARCH PLAYER"}
@@ -420,60 +466,89 @@ hover:bg-violet-500/30
     </div>
 
     <div className="flex flex-wrap gap-3">
-      {recentSearches.map(
-        (search, i) => (
-          <button
-            key={i}
-            onClick={() => {
-  setUsername(search.username);
-  setPlatform(search.platform);
+      {recentSearches.map((search) => (
+  <div
+    key={search.id}
+    className="relative"
+  >
+    <button
+      onClick={() => {
+        setUsername(search.username);
+        setPlatform(search.platform);
 
-  router.push(
-    `/player/${search.platform}/${encodeURIComponent(
-      search.username
-    )}`
-  );
-}}
-            className={`
-  px-4
-  py-3
-  rounded-2xl
-  border
-  transition-all
-  duration-300
-  hover:bg-white/[0.08]
-hover:border-white/[0.18]
+        router.push(
+          `/player/${search.platform}/${encodeURIComponent(
+            search.username
+          )}`
+        );
+      }}
+      className={`
+        px-4
+        py-3
+        rounded-2xl
+        border
+        transition-all
+        duration-300
 
-  ${
-    search.platform === "RIOT"
-      ? "bg-red-700/15 border-red-500/20 hover:bg-red-700/25"
+        ${
+          search.platform === "RIOT"
+            ? "bg-red-700/15 border-red-500/20 hover:bg-red-700/25"
 
-    : search.platform === "STEAM"
-      ? "bg-sky-700/15 border-sky-500/20 hover:bg-sky-700/25"
+            : search.platform === "STEAM"
+            ? "bg-sky-700/15 border-sky-500/20 hover:bg-sky-700/25"
 
-    : search.platform === "EPIC"
-      ? "bg-white/10 border-white/[0.08] hover:bg-white/15"
+            : search.platform === "EPIC"
+            ? "bg-white/10 border-white/[0.08] hover:bg-white/15"
 
-    : search.platform === "PSN"
-      ? "bg-blue-700/15 border-blue-500/20 hover:bg-blue-700/25"
+            : search.platform === "PSN"
+            ? "bg-blue-700/15 border-blue-500/20 hover:bg-blue-700/25"
 
-    : search.platform === "XBOX"
-      ? "bg-green-700/15 border-green-500/20 hover:bg-green-700/25"
+            : search.platform === "XBOX"
+            ? "bg-green-700/15 border-green-500/20 hover:bg-green-700/25"
 
-    : "bg-[#161616] border-white/[0.05]"
-  }
-`}
-          >
-            <div className="text-sm font-black">
-              {search.username}
-            </div>
+            : "bg-[#161616] border-white/[0.05]"
+        }
+      `}
+    >
+      <div className="text-sm font-black">
+        {search.username}
+      </div>
 
-            <div className="text-xs text-white/40 mt-1">
-              {search.platform}
-            </div>
-          </button>
-        )
-      )}
+      <div className="text-xs text-white/40 mt-1">
+        {search.platform}
+      </div>
+    </button>
+
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        deleteSearch(search.id);
+      }}
+      className="
+        absolute
+        -top-2
+        -right-2
+
+        w-6
+        h-6
+
+        rounded-full
+
+        bg-red-500/20
+        border
+        border-red-500/20
+
+        text-red-300
+        text-xs
+        font-black
+
+        hover:bg-red-500/30
+      "
+    >
+      ×
+    </button>
+  </div>
+))}
     </div>
   </div>
 )}
@@ -528,7 +603,14 @@ hover:border-white/[0.18]
 ].map((item) => (
   <div
     key={item.label}
-    className="rounded-2xl border border-white/[0.04] bg-[#161616] p-5"
+    className="
+rounded-2xl
+border
+border-white/[0.08]
+bg-white/[0.03]
+backdrop-blur-xl
+p-5
+"
   >
     <div className="text-white/40 text-xs uppercase tracking-[2px]">
       {item.label}
@@ -542,7 +624,23 @@ hover:border-white/[0.18]
               </div>
             </div>
 
-            <div className="min-h-0 xl:min-h-[760px] rounded-[20px] bg-[#111111] p-5 sm:p-8">
+            <div
+  className="
+  min-h-0
+  xl:min-h-[760px]
+
+  rounded-[20px]
+
+  border
+  border-white/[0.08]
+
+  bg-white/[0.03]
+  backdrop-blur-xl
+
+  p-5
+  sm:p-8
+"
+>
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <div className="uppercase tracking-[4px] text-white/40 text-sm">
@@ -692,7 +790,22 @@ hover:border-white/[0.18]
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8 items-start">
-            <div className="h-full rounded-[20px] border border-white/[0.04] bg-[#111111] p-5 sm:p-8">
+            <div
+  className="
+  h-full
+
+  rounded-[20px]
+
+  border
+  border-white/[0.08]
+
+  bg-white/[0.03]
+  backdrop-blur-xl
+
+  p-5
+  sm:p-8
+"
+>
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <div className="uppercase tracking-[4px] text-white/40 text-sm">
@@ -735,7 +848,17 @@ hover:border-white/[0.18]
                 ].map((news) => (
                   <div
                     key={news.title}
-                    className="rounded-[20px] border border-white/[0.04] bg-[#161616] p-5 sm:p-6"
+                    className="
+rounded-[20px]
+border
+border-white/[0.08]
+
+bg-white/[0.03]
+backdrop-blur-xl
+
+p-5
+sm:p-6
+"
                   >
                     <div className="text-lg sm:text-2xl font-black leading-snug">
                       {news.title}
@@ -749,7 +872,23 @@ hover:border-white/[0.18]
               </div>
             </div>
 
-            <div className="min-h-0 xl:min-h-[760px] rounded-[20px] border border-white/[0.04] bg-[#111111] p-5 sm:p-8">
+            <div
+  className="
+  min-h-0
+  xl:min-h-[760px]
+
+  rounded-[20px]
+
+  border
+  border-white/[0.08]
+
+  bg-white/[0.03]
+  backdrop-blur-xl
+
+  p-5
+  sm:p-8
+"
+>
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6 sm:mb-8">
                 <div>
                   <div className="uppercase tracking-[4px] text-white/40 text-sm">
@@ -795,7 +934,16 @@ hover:border-white/[0.18]
                 ].map((tournament) => (
                   <div
                     key={tournament.name}
-                    className="rounded-2xl border border-white/[0.04] bg-[#161616] p-4"
+                    className="
+rounded-2xl
+border
+border-white/[0.08]
+
+bg-white/[0.03]
+backdrop-blur-xl
+
+p-4
+"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                       <div className="min-w-0">
@@ -808,7 +956,19 @@ hover:border-white/[0.18]
                         </div>
                       </div>
 
-                      <div className="px-5 py-3 rounded-2xl bg-[#1a1a1a] border border-white/[0.08] font-black">
+                      <div className="
+px-5
+py-3
+rounded-2xl
+
+bg-white/[0.03]
+backdrop-blur-xl
+
+border
+border-white/[0.08]
+
+font-black
+">
                         {tournament.prize}
                       </div>
                     </div>
@@ -818,7 +978,20 @@ hover:border-white/[0.18]
             </div>
             </div>
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8">
-            <div className="rounded-[20px] border border-white/[0.04] bg-[#111111] p-5 sm:p-8">
+            <div
+  className="
+  rounded-[20px]
+
+  border
+  border-white/[0.08]
+
+  bg-white/[0.03]
+  backdrop-blur-xl
+
+  p-5
+  sm:p-8
+"
+>
   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
     <div>
       <div className="uppercase tracking-[4px] text-white/40 text-sm">
@@ -886,15 +1059,18 @@ hover:border-white/[0.18]
       <div
         key={i}
         className="
-          rounded-2xl
-          border
-          border-white/[0.04]
-          bg-[#111111]
-          p-5
-          hover:bg-white/[0.03]
-          transition-all
-          duration-300
-        "
+  rounded-2xl
+  border
+  border-white/[0.08]
+
+  bg-white/[0.03]
+  backdrop-blur-xl
+
+  p-5
+
+  transition-all
+  duration-300
+"
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="min-w-0">
@@ -925,7 +1101,20 @@ hover:border-white/[0.18]
     ))}
   </div>
 </div>
-            <div className="rounded-[20px] border border-white/[0.04] bg-[#111111] p-5 sm:p-8">
+            <div
+  className="
+  rounded-[20px]
+
+  border
+  border-white/[0.08]
+
+  bg-white/[0.03]
+  backdrop-blur-xl
+
+  p-5
+  sm:p-8
+"
+>
   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
     <div>
       <div className="uppercase tracking-[4px] text-white/40 text-sm">
@@ -973,7 +1162,6 @@ hover:border-white/[0.18]
           py-5
           border-b
           border-white/[0.04]
-          hover:bg-white/[0.03]
           transition-all
           duration-300
         "

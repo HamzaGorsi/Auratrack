@@ -918,7 +918,6 @@ shadow-[0_8px_30px_rgba(255,255,255,0.02)]
             h-10
             rounded-xl
             bg-white/[0.05]
-            hover:bg-white/[0.08]
             transition-all
             duration-300
           "
