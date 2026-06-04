@@ -133,9 +133,17 @@ backdrop-blur-xl p-2
               aria-label="Toggle navigation menu"
               onClick={() => setMobileMenuOpen((open) => !open)}
               className="
-                xl:hidden h-11 sm:h-12 px-4 sm:px-5
-                rounded-2xl border border-white/[0.05]
-                bg-[#1a1a1a] text-sm font-bold text-white
+                xl:hidden 
+                h-11 
+                sm:h-12 
+                px-4 
+                sm:px-5
+                rounded-2xl border 
+                border-white/[0.05]
+                bg-white/[0.05]
+                backdrop-blur-xl
+                text-sm font-bold 
+                text-white
               "
             >
               {mobileMenuOpen ? "Close" : "Menu"}
@@ -143,12 +151,19 @@ backdrop-blur-xl p-2
 
             {status === "loading" ? null : session ? (
               <div
-                className="relative rounded-[28px] bg-violet-500/20
-backdrop-blur-xl
-border border-violet-400/20
-hover:bg-violet-500/30"
-                ref={profileRef}
-              >
+  className="
+    relative
+    rounded-[28px]
+    bg-cyan-500/15
+    backdrop-blur-xl
+    border
+    border-cyan-400/20
+    hover:bg-cyan-500/20
+    transition-all
+    duration-300
+  "
+  ref={profileRef}
+>
                 <button
                   type="button"
                   onClick={() =>
@@ -161,7 +176,8 @@ hover:bg-violet-500/30"
                 >
                   <div
                     className="
-                      w-8 h-8 rounded-xl bg-white/[0.02]
+                      w-8 h-8 rounded-xl bg-cyan-400/10
+                      border border-cyan-400/10
                       flex items-center justify-center
                       text-sm font-black flex-shrink-0
                     "
@@ -186,10 +202,18 @@ hover:bg-violet-500/30"
                 <div
                   className={`
                     absolute right-0 top-full mt-1 w-48 sm:w-full min-w-[200px]
-                    rounded-[20px] border border-white/[0.08]
-                    bg-[#050505]/95 shadow-[0_0_40px_rgba(0,0,0,0.45)]
-                    overflow-hidden transition-all duration-200
-                    origin-top-right z-50
+                    rounded-[20px] 
+                    border border-white/[0.08]
+
+                    bg-white/[0.06]
+                    backdrop-blur-3xl
+
+                    shadow-[0_0_40px_rgba(0,0,0,0.45)]
+                    overflow-hidden 
+                    transition-all 
+                    duration-200
+                    origin-top-right 
+                    z-[9999]
                     ${
                       profileMenuOpen
                         ? "translate-y-0 opacity-100 pointer-events-auto"
@@ -202,7 +226,7 @@ hover:bg-violet-500/30"
                       href="/profile"
                       className="
                         h-12 px-5 flex items-center text-white/80
-                        hover:bg-white/[0.04] transition-all
+                        hover:bg-cyan-500/10 transition-all
                       "
                     >
                       Profile
@@ -212,7 +236,7 @@ hover:bg-violet-500/30"
                       href="/settings"
                       className="
                         h-12 px-5 flex items-center text-white/80
-                        hover:bg-white/[0.04] transition-all
+                        hover:bg-cyan-500/10 transition-all
                       "
                     >
                       Settings
@@ -238,13 +262,30 @@ hover:bg-violet-500/30"
                 <Link
                   href="/login"
                   className="
-                    hidden sm:flex h-12 min-w-[90px] px-5 sm:px-6
-                    rounded-2xl border border-white/[0.08] bg-white/[0.03]
-backdrop-blur-xl
-                    items-center justify-center font-semibold
-                    text-white/75 hover:text-white hover:bg-white/[0.03]
-                    transition-all duration-300
-                  "
+  hidden sm:flex
+  h-12
+  min-w-[90px]
+  px-5 sm:px-6
+
+  rounded-2xl
+
+  bg-white/[0.06]
+  backdrop-blur-xl
+
+  border
+  border-white/[0.12]
+
+  items-center
+  justify-center
+
+  font-semibold
+  text-white
+
+  hover:border-white/[0.18]
+
+  transition-all
+  duration-300
+"
                 >
                   Login
                 </Link>
