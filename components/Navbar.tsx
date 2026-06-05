@@ -17,7 +17,7 @@ function navLinkClass(pathname: string, href: string) {
     h-11 px-6 rounded-xl flex items-center transition-all duration-200
     ${
       active
-        ? "bg-violet-500/10 text-white border border-violet-400/10"
+        ? "bg-white/[0.06] text-white border border-white/[0.08]"
         : "text-white/65 hover:text-white"
     }
   `;
@@ -72,7 +72,7 @@ backdrop-blur-xl
     flex flex-col
     relative
     z-[999]
-    overflow-visible
+    overflow-hidden
   "
 >
         <div className="flex items-center justify-between px-4 md:px-8 py-3 sm:py-0 sm:min-h-24">
@@ -156,8 +156,8 @@ backdrop-blur-xl
     relative
     rounded-[28px]
 
-    bg-violet-500/15
-    border-violet-400/20
+    bg-white/[0.05]
+border-white/[0.08]
     border
 
     transition-all
@@ -177,8 +177,8 @@ backdrop-blur-xl
                 >
                   <div
                     className="
-                      w-8 h-8 rounded-xl bg-violet-500/10
-                      border border-violet-400/10
+                      w-8 h-8 rounded-xl bg-white/[0.05]
+border border-white/[0.08]
                       flex items-center justify-center
                       text-sm font-black flex-shrink-0
                     "
@@ -294,14 +294,18 @@ backdrop-blur-xl
                 <Link
                   href="/signup"
                   className="
-                    h-11 sm:h-12 px-4 sm:px-7 rounded-2xl
-                    bg-violet-500/20
-backdrop-blur-xl
-border border-violet-400/20
-hover:border-violet-300/40
+                    h-11 
+                    sm:h-12 
+                    min-w-[90px]
+                    px-5 sm:px-6 
+                    rounded-2xl
+                    bg-white/[0.05]
+                    backdrop-blur-xl
+                    border border-white/[0.08]
+                    hover:border-white/[0.16]
                     flex items-center justify-center font-black text-white
                     hover:brightness-110 transition-all duration-300
-                    shadow-[0_0_20px_rgba(99,102,241,0.25)] text-sm sm:text-base
+                    text-sm sm:text-base
                   "
                 >
                   Sign Up
