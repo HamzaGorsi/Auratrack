@@ -72,16 +72,33 @@ setCache(matchId, data);
 
   try {
     const response = await fetch(
-      `https://europe.api.riotgames.com/val/match/v1/matchlists/by-puuid/${puuid}?size=5`,
-      {
-        headers: {
-          "X-Riot-Token":
-            process.env.RIOT_API_KEY!,
-        },
-      }
-    );
+  `https://europe.api.riotgames.com/val/match/v1/matchlists/by-puuid/${puuid}?size=5`,
+  {
+    headers: {
+      "X-Riot-Token":
+        process.env.RIOT_API_KEY!,
+    },
+  }
+);
 
-    if (!response.ok) {
+console.log(
+  "RIOT MATCH STATUS:",
+  response.status
+);
+
+console.log(
+  "RIOT KEY EXISTS:",
+  !!process.env.RIOT_API_KEY
+);
+
+const body = await response.text();
+
+console.log(
+  "RIOT MATCH RESPONSE:",
+  body
+);
+
+if (!response.ok) {
       return NextResponse.json(
         {
           error:
@@ -93,8 +110,7 @@ setCache(matchId, data);
       );
     }
 
-    const data =
-      await response.json();
+    const data = JSON.parse(body);
 
     return NextResponse.json(data);
   } catch {

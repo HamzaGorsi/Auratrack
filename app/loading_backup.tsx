@@ -3,7 +3,7 @@ export default function Loading() {
     <div className="fixed inset-0 bg-black flex items-center justify-center overflow-hidden">
       <div className="relative flex flex-col items-center">
         {/* OUTER GLOW */}
-        <div className="absolute w-44 h-44 rounded-full bg-violet-600/20" />
+        <div className="absolute w-44 h-44 rounded-full bg-cyan-500/15" />
 
         {/* ROTATING RING */}
         <div
@@ -12,8 +12,8 @@ export default function Loading() {
             h-32
             rounded-full
             border-[3px]
-            border-violet-500/20
-            border-t-violet-400
+            border-cyan-500/20
+            border-t-cyan-400
             animate-spin
           "
           style={{
@@ -29,7 +29,7 @@ export default function Loading() {
             h-20
             rounded-full
             border
-            border-violet-400/20
+            border-cyan-400/20
           "
         />
 

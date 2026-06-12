@@ -33,6 +33,17 @@ const rankStyles: any = {
     "from-zinc-600 to-zinc-800 text-white",
 };
 
+const platformLogos: Record<string, string> = {
+  RIOT: "/platforms/riot.svg",
+  STEAM: "/platforms/steam.svg",
+  EPIC: "/platforms/epic.svg",
+  PSN: "/platforms/psn.svg",
+  XBOX: "/platforms/xbox.svg",
+  UBISOFT: "/platforms/ubisoft.svg",
+  EA: "/platforms/ea.svg",
+  "BATTLE.NET": "/platforms/battlenet.svg",
+};
+
 export default function PlayerPage({
   params,
 }: {
@@ -113,7 +124,11 @@ const [providerProfile, setProviderProfile] =
       }
 
       setData(json);
-
+if (platform === "RIOT") {
+  setLiveMatches(
+    json.matches ?? []
+  );
+}
       if (platform === "RIOT") {
         setProviderProfile({
           username:
@@ -126,29 +141,32 @@ const [providerProfile, setProviderProfile] =
         });
 
         setLiveMatches(json.matches ?? []);
-      } else if (provider) {
-        try {
-          const profile =
-            await provider.searchPlayer(
-              username
-            );
+      } else if (
+  provider &&
+  platform !== "RIOT"
+) {
+  try {
+    const profile =
+      await provider.searchPlayer(
+        username
+      );
 
-          setProviderProfile(profile);
+    setProviderProfile(profile);
 
-          const providerMatches =
-            await provider.getMatches(
-              username
-            );
+    const providerMatches =
+      await provider.getMatches(
+        username
+      );
 
-          setLiveMatches(
-            providerMatches?.length
-              ? providerMatches
-              : json.matches ?? []
-          );
-        } catch {
-          setLiveMatches(json.matches ?? []);
-        }
-      }
+    setLiveMatches(
+      providerMatches?.length
+        ? providerMatches
+        : json.matches ?? []
+    );
+  } catch {
+    setLiveMatches(json.matches ?? []);
+  }
+}
 
       setBio(json.player.bio || "");
       setFavoriteGame(
@@ -287,7 +305,10 @@ const displayedMatches =
   liveMatches.length > 0
     ? liveMatches
     : matches;
-
+console.log(
+  "DISPLAYED MATCHES:",
+  displayedMatches
+);
   const achievements =
     player.achievements || [];
 
@@ -356,7 +377,7 @@ const displayedMatches =
         
 
         <div className="relative z-10">
-          <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-8">
+          <div className="flex flex-col gap-8">
             {/* LEFT */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-6 min-w-0">
               {/* AVATAR */}
@@ -374,7 +395,7 @@ const displayedMatches =
                   justify-center
                   text-3xl sm:text-5xl
                   font-black
-                  shadow-[0_0_40px_rgba(99,102,241,0.45)]
+                  shadow-[0_0_40px_rgba(34,211,238,0.25)]
                 "
               >
                 {player.username?.charAt(0)}
@@ -390,38 +411,71 @@ const displayedMatches =
                   </div>
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black leading-none break-words">
+                <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black leading-none whitespace-nowrap">
                   {providerProfile?.username ||
   player.username}
                 </h1>
 
-                <div className="flex items-center gap-4 mt-4">
+                <div className="flex flex-wrap items-center gap-8 mt-6">
                   <div
-                    className="
-                      px-4
-                      py-2
-                      rounded-2xl
-                      bg-white/5
-                      border
-                      border-white/[0.04]
-                      text-white/60
-                      font-semibold
-                    "
-                  >
-                    {player.platform}
-                  </div>
+  className="
+h-12
+px-5
+
+rounded-2xl
+
+bg-white/5
+border
+border-white/[0.04]
+
+flex
+items-center
+gap-3
+
+flex-shrink-0
+"
+>
+  <img
+    src={
+      platformLogos[
+        player.platform
+      ]
+    }
+    alt={player.platform}
+    className="
+      w-4
+      h-4
+    "
+  />
+
+  <span className="text-white/70 font-semibold">
+  {platform === "RIOT"
+    ? "Valorant"
+    : player.platform}
+</span>
+</div>
 
                   <div
-                    className="
-                      px-4
-                      py-2
-                      rounded-2xl
-                      bg-gradient-to-r
-                      from-[#18181b]
-                      to-black
-                      font-bold
-                    "
-                  >
+  className="
+h-12
+px-4
+
+rounded-2xl
+
+bg-white/5
+border
+border-white/[0.04]
+
+flex
+items-center
+justify-center
+gap-2
+
+font-bold
+
+whitespace-nowrap
+"
+>
                     Current Rank:
 {" "}
 {providerProfile?.rank ||
@@ -440,13 +494,8 @@ player.rank ||
                     {bio}
                   </div>
                 )}
-              </div>
-            </div>
-
-            {/* RIGHT */}
-<div className="w-full xl:min-w-[340px]">
-  {/* SOCIAL ACTIONS */}
-  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-5">
+                {/* SOCIAL ACTIONS */}
+  <div className="flex flex-wrap gap-4 mt-7">
     <button
   onClick={async () => {
     if (!session?.user?.username) {
@@ -488,23 +537,20 @@ player.rank ||
     toast.success("Friend request sent!");
   }}
   className="
-flex-1
-h-14
+h-12
+px-6
 rounded-2xl
 
-bg-gradient-to-r
-from-violet-600/30
-to-cyan-500/20
+bg-cyan-500/12
 
 border
-border-violet-400/30
-
-backdrop-blur-xl
+border-cyan-400/20
 
 text-white
 font-black
 
-hover:border-violet-300/50
+hover:bg-cyan-500/18
+hover:border-cyan-300/40
 
 transition-all
 duration-300
@@ -515,23 +561,20 @@ duration-300
 
     <button
       className="
-flex-1
-h-14
+h-12
+px-6
 rounded-2xl
 
-bg-gradient-to-r
-from-violet-600/30
-to-cyan-500/20
+bg-cyan-500/12
 
 border
-border-violet-400/30
-
-backdrop-blur-xl
+border-cyan-400/20
 
 text-white
 font-black
 
-hover:border-violet-300/50
+hover:bg-cyan-500/18
+hover:border-cyan-300/40
 
 transition-all
 duration-300
@@ -540,8 +583,14 @@ duration-300
       Follow
     </button>
   </div>
+              </div>
+            </div>
 
-  <div className="grid grid-cols-2 gap-5">
+            {/* RIGHT */}
+<div className="w-full mt-2">
+
+
+  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <div
                 className="
                   rounded-[20px]
@@ -549,7 +598,7 @@ duration-300
                   border-white/[0.04]
                   bg-white/[0.03]
 backdrop-blur-xl
-                  p-4 sm:p-6
+                  px-4 py-3 h-24
                 "
               >
                 <div className="text-white/40 text-sm uppercase tracking-[3px]">
@@ -568,7 +617,7 @@ backdrop-blur-xl
                   border-white/[0.04]
                   bg-white/[0.03]
 backdrop-blur-xl
-                  p-4 sm:p-6
+                  px-4 py-3 h-24
                 "
               >
                 <div className="text-white/40 text-sm uppercase tracking-[3px]">
@@ -587,7 +636,7 @@ backdrop-blur-xl
                   border-white/[0.04]
                   bg-white/[0.03]
 backdrop-blur-xl
-                  p-4 sm:p-6
+                  px-4 py-3 h-24
                 "
               >
                 <div className="text-white/40 text-sm uppercase tracking-[3px]">
@@ -595,7 +644,7 @@ backdrop-blur-xl
                 </div>
 
                 <div className="text-3xl sm:text-5xl font-black mt-3">
-                  {player.matches || 0}
+                  {player.games || 0}
                 </div>
               </div>
 
@@ -606,15 +655,15 @@ backdrop-blur-xl
                   border-white/[0.04]
                   bg-white/[0.03]
 backdrop-blur-xl
-                  p-4 sm:p-6
+                  px-4 py-3 h-24
                 "
               >
                 <div className="text-white/40 text-sm uppercase tracking-[3px]">
-                  Accuracy
+                  Headshots
                 </div>
 
                 <div className="text-3xl sm:text-5xl font-black mt-3 text-slate-300">
-                  {player.accuracy || 92}%
+                  N/A
                 </div>
               </div>
             </div>
@@ -754,7 +803,12 @@ backdrop-blur-xl
   </div>
 
   <div className="space-y-4">
-    {displayedMatches.map(
+    {displayedMatches.length === 0 ? (
+  <div className="text-white/40">
+    No match data available yet.
+  </div>
+) : (
+  displayedMatches.map(
       (match: any) => (
         <div
           key={match.id}
@@ -903,8 +957,9 @@ backdrop-blur-xl
             </div>
           </div>
         </div>
-      )
+      ))
     )}
+  
   </div>
 </div>
     </div>

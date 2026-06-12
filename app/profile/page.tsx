@@ -243,8 +243,7 @@ setTimeout(() => {
   return (
   <PageWrapper>
     <div className="relative min-h-screen bg-black text-white overflow-hidden">
-     <div className="absolute top-[-250px] left-[-250px] w-[700px] h-[700px] rounded-full bg-violet-500/10 blur-[180px]" />
-<div className="absolute bottom-[-250px] right-[-250px] w-[700px] h-[700px] rounded-full bg-cyan-500/10 blur-[180px]" /> 
+      
       <div className="relative z-10 w-full px-4 sm:px-6 pt-28 sm:pt-36 pb-12 sm:pb-16 overflow-x-hidden">
         {/* BACKGROUND GLOWS */}
 <div
@@ -317,8 +316,8 @@ shadow-[0_8px_40px_rgba(255,255,255,0.03)]
       rounded-[20px]
       overflow-hidden
       bg-gradient-to-br
-      from-violet-500/30
-to-cyan-500/30
+      from-cyan-500/30
+      to-sky-500/30
       flex
       items-center
       justify-center
@@ -365,12 +364,12 @@ to-cyan-500/30
     h-12 sm:h-14
     px-6 sm:px-8
     rounded-2xl
-    bg-violet-500/20
+    bg-cyan-500/12
 border
-border-violet-400/20
+border-cyan-400/20
 backdrop-blur-xl
     font-black
-    hover:bg-violet-500/30
+    hover:bg-cyan-500/18
 hover:scale-[1.02]
     transition-all
     duration-300
@@ -536,7 +535,7 @@ hover:scale-[1.02]
   ? "bg-emerald-500/20 border border-emerald-400/20 backdrop-blur-xl scale-95 opacity-80"
   : saved
   ? "bg-emerald-500/20 border border-emerald-400/20 backdrop-blur-xl scale-[1.02]"
-  : "bg-violet-500/20 border border-violet-400/20 backdrop-blur-xl hover:bg-violet-500/30 hover:scale-[1.02]"
+  : "bg-cyan-500/12 border border-cyan-400/20 backdrop-blur-xl hover:bg-cyan-500/18 hover:scale-[1.02]"
     }
   `}
 >
@@ -621,23 +620,45 @@ shadow-[0_8px_30px_rgba(255,255,255,0.02)]
 
   {[
   {
-    key: "RIOT",
-    label: "Riot Games",
-    accent: "text-red-400",
-    badge: "R",
-  },
-  {
-    key: "STEAM",
-    label: "Steam",
-    accent: "text-sky-400",
-    badge: "S",
-  },
-  {
-    key: "EPIC",
-    label: "Epic Games",
-    accent: "text-white",
-    badge: "E",
-  },
+  key: "RIOT",
+  label: "Riot Games",
+  logo: "/platforms/riot.svg",
+},
+{
+  key: "STEAM",
+  label: "Steam",
+  logo: "/platforms/steam.svg",
+},
+{
+  key: "EPIC",
+  label: "Epic Games",
+  logo: "/platforms/epic.svg",
+},
+{
+  key: "PSN",
+  label: "PlayStation",
+  logo: "/platforms/psn.svg",
+},
+{
+  key: "XBOX",
+  label: "Xbox",
+  logo: "/platforms/xbox.svg",
+},
+{
+  key: "UBISOFT",
+  label: "Ubisoft",
+  logo: "/platforms/ubisoft.svg",
+},
+{
+  key: "EA",
+  label: "EA",
+  logo: "/platforms/ea.svg",
+},
+{
+  key: "BATTLE.NET",
+  label: "Battle.net",
+  logo: "/platforms/battlenet.svg",
+},
 ].map((platform) => {
 
     const linkedAccount =
@@ -672,16 +693,29 @@ duration-300
       >
      <div className="flex items-center gap-3 min-w-0">
   <div
-    className={`
-      w-10 h-10 rounded-xl
-      bg-white/[0.04] border border-white/[0.06]
-      flex items-center justify-center
-      font-black text-sm flex-shrink-0
-      ${platform.accent}
-    `}
-  >
-    {platform.badge}
-  </div>
+  className="
+    w-10
+    h-10
+    rounded-xl
+    bg-white/[0.04]
+    border
+    border-white/[0.06]
+    flex
+    items-center
+    justify-center
+    flex-shrink-0
+  "
+>
+  <img
+    src={platform.logo}
+    alt={platform.label}
+    className="
+      w-5
+      h-5
+      object-contain
+    "
+  />
+</div>
 
   <div className="min-w-0">
     <div className="font-bold text-white/90 truncate">
@@ -779,11 +813,11 @@ duration-300
               h-10
               px-5
               rounded-xl
-              bg-violet-500/20
+              bg-cyan-500/12
 border
-border-violet-400/20
+border-cyan-400/20
 backdrop-blur-xl
-hover:bg-violet-500/30
+hover:bg-cyan-500/18
 hover:scale-[1.02]
               text-sm
               font-bold
@@ -974,11 +1008,11 @@ shadow-[0_8px_30px_rgba(255,255,255,0.02)]
           w-full
           h-14
           rounded-2xl
-          bg-violet-500/20
+          bg-cyan-500/12
 border
-border-violet-400/20
+border-cyan-400/20
 backdrop-blur-xl
-hover:bg-violet-500/30
+hover:bg-cyan-500/18
           font-black
 hover:scale-[1.02]
           transition-all

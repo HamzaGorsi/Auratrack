@@ -28,6 +28,8 @@ const [
 const [searchError, setSearchError] =
   useState("");
   const [username, setUsername] = useState("");
+  const [suggestions, setSuggestions] =
+  useState<any[]>([]);
   const [platform, setPlatform] = useState("EPIC");
   const router = useRouter();
   async function deleteSearch(
@@ -35,11 +37,11 @@ const [searchError, setSearchError] =
 ) {
   try {
     const res = await fetch(
-      `/api/recent-searches/${id}`,
-      {
-        method: "DELETE",
-      }
-    );
+  `/api/search-history/${id}`,
+  {
+    method: "DELETE",
+  }
+);
 
     if (!res.ok) return;
 
@@ -191,6 +193,39 @@ loadHomepageMatches();
 
   const searchPlayer = async () => {
   if (!username.trim()) return;
+  let detectedPlatform = platform;
+
+if (username.includes("#")) {
+  detectedPlatform = "RIOT";
+}
+else if (/^\d{17}$/.test(username)) {
+  detectedPlatform = "STEAM";
+}
+else if (username.startsWith("epic:")) {
+  detectedPlatform = "EPIC";
+}
+else if (username.startsWith("psn:")) {
+  detectedPlatform = "PSN";
+}
+else if (username.startsWith("xbox:")) {
+  detectedPlatform = "XBOX";
+}
+if (
+  !username.includes("#") &&
+  !/^\d{17}$/.test(username) &&
+  !username.startsWith("epic:") &&
+  !username.startsWith("psn:") &&
+  !username.startsWith("xbox:")
+) {
+  router.push(
+    `/search/${encodeURIComponent(
+      username
+    )}`
+  );
+
+  return;
+}
+setPlatform(detectedPlatform);
 setSearchLoading(true);
 
 setSearchError("");
@@ -203,9 +238,9 @@ setSearchError("");
       },
 
       body: JSON.stringify({
-        username,
-        platform,
-      }),
+  username,
+  platform: detectedPlatform,
+}),
     });
   } catch (error) {
     console.error(error);
@@ -217,18 +252,20 @@ setSearchError("");
 
   sessionStorage.setItem(
   "lastPlatform",
-  platform
+  detectedPlatform
 );
 
 const provider =
-  providers[platform as keyof typeof providers];
+  providers[
+    detectedPlatform as keyof typeof providers
+  ];
 
 if (!provider) {
   console.error("Provider not found");
   return;
 }
 if (
-  platform === "RIOT" &&
+  detectedPlatform === "RIOT" &&
   !username.includes("#")
 ) {
   setSearchError(
@@ -239,7 +276,7 @@ if (
 
   return;
 }
-if (platform === "RIOT") {
+if (detectedPlatform === "RIOT") {
   const split =
     username.split("#");
 
@@ -266,7 +303,7 @@ if (platform === "RIOT") {
 }
   try {
   router.push(
-    `/player/${platform}/${encodeURIComponent(
+  `/player/${detectedPlatform}/${encodeURIComponent(
       username
     )}`
   );
@@ -302,11 +339,25 @@ backdrop-blur-3xl p-5 sm:p-8">
               <div>
                 <input
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  onKeyDown={(e) => {
-  if (e.key === "Enter") {
-    searchPlayer();
+                  onChange={async (e) => {
+  const value = e.target.value;
+
+  setUsername(value);
+
+  if (value.length < 3) {
+    setSuggestions([]);
+    return;
   }
+
+  const res = await fetch(
+    `/api/users/search?q=${encodeURIComponent(
+      value
+    )}`
+  );
+
+  const data = await res.json();
+
+  setSuggestions(data);
 }}
                   placeholder={
   platform === "RIOT"
@@ -315,7 +366,58 @@ backdrop-blur-3xl p-5 sm:p-8">
 }
                   className="w-full h-16 px-6 text-center rounded-2xl bg-[#161616] border-0 outline-none text-lg"
                 />
+{suggestions.length > 0 && (
+  <div
+    className="
+      mt-3
+      rounded-2xl
+      border
+      border-white/[0.04]
+      bg-[#161616]
+      overflow-hidden
+    "
+  >
+    {suggestions.map((user) => (
+      <button
+        key={user.id}
+        type="button"
+        onClick={() => {
+          setUsername(user.username);
 
+          if (
+            user.username.includes("#")
+          ) {
+            setPlatform("RIOT");
+          }
+
+          setSuggestions([]);
+        }}
+        className="
+          w-full
+          px-5
+          py-4
+          text-left
+          hover:bg-white/[0.04]
+          border-b
+          border-white/[0.04]
+        "
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="font-bold">
+              {user.username}
+            </div>
+
+            <div className="text-xs text-white/40">
+              {user.favoriteGame ||
+                "Player"}
+            </div>
+          </div>
+        </div>
+      </button>
+    ))}
+  </div>
+)}
                 <div className="mt-5 grid grid-cols-2 xl:grid-cols-4 gap-3">
                   {[
                     {

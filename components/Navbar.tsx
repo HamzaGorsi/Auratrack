@@ -17,7 +17,7 @@ function navLinkClass(pathname: string, href: string) {
     h-11 px-6 rounded-xl flex items-center transition-all duration-200
     ${
       active
-        ? "bg-white/[0.06] text-white border border-white/[0.08]"
+  ? "bg-white/[0.06] text-white"
         : "text-white/65 hover:text-white"
     }
   `;
@@ -72,7 +72,7 @@ backdrop-blur-xl
     flex flex-col
     relative
     z-[999]
-    overflow-hidden
+    overflow-visible
   "
 >
         <div className="flex items-center justify-between px-4 md:px-8 py-3 sm:py-0 sm:min-h-24">
@@ -86,7 +86,7 @@ backdrop-blur-xl
                 className="
                   w-10 h-10 sm:w-12 sm:h-12
                   rounded-2xl bg-gradient-to-br
-                  from-pink-500 via-[#1F2937] to-violet-600
+                  from-cyan-500 via-[#111111] to-sky-600
                   flex items-center justify-center
                   font-black text-lg sm:text-xl
                   flex-shrink-0
@@ -227,7 +227,7 @@ border border-white/[0.08]
                       href="/profile"
                       className="
                         h-12 px-5 flex items-center text-white/80
-                        hover:bg-violet-500/10 transition-all
+                        hover:bg-white/[0.06] transition-all
                       "
                     >
                       Profile
@@ -237,7 +237,7 @@ border border-white/[0.08]
                       href="/settings"
                       className="
                         h-12 px-5 flex items-center text-white/80
-                        hover:bg-violet-500/10 transition-all
+                        hover:bg-white/[0.06] transition-all
                       "
                     >
                       Settings
@@ -245,9 +245,13 @@ border border-white/[0.08]
 
                     <button
                       type="button"
-                      onClick={() =>
-                        signOut({ callbackUrl: "/" })
-                      }
+                      onClick={() => {
+  sessionStorage.clear();
+
+  signOut({
+    callbackUrl: "/",
+  });
+}}
                       className="
                         w-full h-12 px-5 flex items-center text-red-300
                         hover:bg-red-500/10 transition-all
@@ -270,7 +274,7 @@ border border-white/[0.08]
 
   rounded-2xl
 
-  bg-violet-500/12
+  bg-cyan-500/12
   backdrop-blur-xl
 
   border
@@ -282,7 +286,7 @@ border border-white/[0.08]
   font-semibold
   text-white
 
-  hover:border-violet-400/20
+  hover:border-cyan-400/20
 
   transition-all
   duration-300
@@ -294,19 +298,30 @@ border border-white/[0.08]
                 <Link
                   href="/signup"
                   className="
-                    h-11 
-                    sm:h-12 
-                    min-w-[90px]
-                    px-5 sm:px-6 
-                    rounded-2xl
-                    bg-white/[0.05]
-                    backdrop-blur-xl
-                    border border-white/[0.08]
-                    hover:border-white/[0.16]
-                    flex items-center justify-center font-black text-white
-                    hover:brightness-110 transition-all duration-300
-                    text-sm sm:text-base
-                  "
+  h-12
+  min-w-[90px]
+  px-6
+
+  rounded-2xl
+
+  bg-cyan-500/12
+  backdrop-blur-xl
+
+  border
+  border-white/[0.12]
+
+  flex
+  items-center
+  justify-center
+
+  font-semibold
+  text-white
+
+  hover:border-cyan-400/20
+
+  transition-all
+  duration-300
+"
                 >
                   Sign Up
                 </Link>

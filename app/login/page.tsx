@@ -38,9 +38,9 @@ rememberMe,
     <div className="min-h-screen bg-black text-white flex items-center justify-center px-6 relative overflow-hidden">
       {/* BACKGROUND */}
 <div className="absolute inset-0 overflow-hidden">
-  <div className="absolute top-[-250px] left-[-250px] w-[700px] h-[700px] rounded-full bg-violet-500/15 blur-[180px]" />
+  <div className="absolute top-[120px] left-[-250px] w-[700px] h-[700px] rounded-full bg-violet-500/15 blur-[180px]" />
 
-  <div className="absolute bottom-[-250px] right-[-250px] w-[700px] h-[700px] rounded-full bg-cyan-500/15 blur-[180px]" />
+<div className="absolute bottom-[-300px] right-[-250px] w-[700px] h-[700px] rounded-full bg-cyan-500/15 blur-[180px]" />
 
   <div
     className="

@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 export default function LeaderboardPage() {
   const [players, setPlayers] =
     useState<any[]>([]);
-
+const [selectedGame, setSelectedGame] =
+  useState("ALL");    
   async function loadLeaderboard() {
     const res = await fetch(
       "/api/leaderboard",
@@ -38,7 +39,37 @@ export default function LeaderboardPage() {
               <h1 className="text-6xl font-black mt-3">
                 Global Leaderboard
               </h1>
+<div className="flex gap-3 mt-6">
+  {[
+    "ALL",
+    "Valorant",
+    "Fortnite",
+    "Apex",
+    "CS2",
+  ].map((game) => (
+    <button
+      key={game}
+      onClick={() =>
+        setSelectedGame(game)
+      }
+      className={`
+        h-11
+        px-5
+        rounded-xl
+        border
+        transition-all
 
+        ${
+          selectedGame === game
+            ? "bg-cyan-500/15 border-cyan-400/30 text-white"
+            : "bg-white/[0.03] border-white/[0.04] text-white/60 hover:text-white"
+        }
+      `}
+    >
+      {game}
+    </button>
+  ))}
+</div>
               <p className="text-white/45 mt-5 text-lg max-w-[700px] leading-relaxed">
                 Track the highest performing competitive players across all supported games and platforms.
               </p>
@@ -74,7 +105,7 @@ export default function LeaderboardPage() {
         <div className="rounded-[20px] overflow-hidden border border-white/[0.04] bg-white/[0.03]">
           {/* HEADERS */}
           <div className="grid grid-cols-6 px-8 py-6 border-b border-white/[0.04] text-white/40 font-semibold uppercase tracking-[2px] text-sm">
-            <div>Rank</div>
+            <div>Platform</div>
             <div>Player</div>
             <div>KD</div>
             <div>Winrate</div>
@@ -83,45 +114,57 @@ export default function LeaderboardPage() {
           </div>
 
           {/* ROWS */}
-          {players.map((player, index) => (
+          {players
+  .filter(
+    (player) =>
+      selectedGame === "ALL" ||
+      (player.game || "Valorant") === selectedGame
+  )
+  .map((player) => (
             <Link
               key={player.id}
               href={`/player/${player.platform}/${player.username}`}
               className="grid grid-cols-6 px-8 py-7 border-b border-white/[0.04] items-center hover:bg-white/[0.04] transition duration-300 cursor-pointer"
             >
-              {/* RANK */}
-              <div>
-                <div
-                  className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-lg ${
-                    index === 0
-                      ? "bg-yellow-400 text-black"
-                      : index === 1
-                      ? "bg-gray-300 text-black"
-                      : index === 2
-                      ? "bg-orange-500 text-black"
-                      : "bg-white/10 text-white"
-                  }`}
-                >
-                  #{index + 1}
-                </div>
-              </div>
+              {/* PLATFORM */}
+<div>
+  <img
+    src={
+      player.platform === "RIOT"
+        ? "/platforms/riot.svg"
+        : player.platform === "STEAM"
+        ? "/platforms/steam.svg"
+        : player.platform === "EPIC"
+        ? "/platforms/epic.svg"
+        : player.platform === "PSN"
+        ? "/platforms/psn.svg"
+        : player.platform === "XBOX"
+        ? "/platforms/xbox.svg"
+        : player.platform === "EA"
+        ? "/platforms/ea.svg"
+        : player.platform === "UBISOFT"
+        ? "/platforms/ubisoft.svg"
+        : "/platforms/battlenet.svg"
+    }
+    alt={player.platform}
+    className="w-10 h-10"
+  />
+</div>
 
               {/* PLAYER */}
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-violet-600 flex items-center justify-center text-xl font-black">
-                  {player.username
-                    .slice(0, 2)
-                    .toUpperCase()}
-                </div>
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/30 to-sky-500/30 border border-cyan-400/20 flex items-center justify-center text-xl font-black">
+  {player.username
+    .slice(0, 2)
+    .toUpperCase()}
+</div>
 
                 <div>
                   <div className="text-xl font-bold">
                     {player.username}
                   </div>
 
-                  <div className="text-white/45 text-sm mt-1 uppercase tracking-[2px]">
-                    {player.platform}
-                  </div>
+
                 </div>
               </div>
 

@@ -15,16 +15,21 @@ export async function henrikFetch(
 
 if (apiKey) {
   headers.set(
-    "Authorization",
-    `Bearer ${apiKey}`
-  );
+  "Authorization",
+  apiKey
+);
 }
 
-  return fetch(url.toString(), {
+  const response = await fetch(
+  url.toString(),
+  {
     ...init,
     headers,
     cache: "no-store",
-  });
+  }
+);
+
+return response;
 }
 
 export type HenrikPlayerStats = {
@@ -152,15 +157,15 @@ export function formatHenrikMatch(
 ): FormattedValorantMatch | null {
   try {
     const player = findHenrikPlayer(
-      match,
-      gameName,
-      tagLine,
-      puuid
-    );
+  match,
+  gameName,
+  tagLine,
+  puuid
+);
 
-    if (!player?.stats) {
-      return null;
-    }
+if (!player?.stats) {
+  return null;
+}
 
     const kills = Number(player.stats.kills ?? 0);
     const deaths = Number(player.stats.deaths ?? 0);
@@ -260,7 +265,10 @@ export function parseHenrikMatches(
     }
   }
 
-  const games = formattedMatches.length;
+  const games =
+  formattedMatches.length > 0
+    ? formattedMatches.length
+    : rawMatches.length;;
 
   const kd =
     totalDeaths > 0

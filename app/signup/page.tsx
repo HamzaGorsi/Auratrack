@@ -51,7 +51,7 @@ export default function RegisterPage() {
   <div
     className="
       absolute
-      top-[-200px]
+      top-[120px]
       left-[-200px]
       w-[600px]
       h-[600px]

@@ -25,9 +25,9 @@ export default function RootLayout({
       <body className={`${spaceGrotesk.className} bg-black text-white`}>
   {/* GLOBAL BACKGROUND */}
   <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-    <div className="absolute top-[-350px] left-[-350px] w-[1000px] h-[1000px] rounded-full bg-violet-500/10 blur-[240px]" />
+    
 
-    <div className="absolute bottom-[-350px] right-[-350px] w-[1000px] h-[1000px] rounded-full bg-cyan-500/10 blur-[240px]" />
+    
 
     <div
       className="absolute inset-0 opacity-[0.025]"

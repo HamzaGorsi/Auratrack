@@ -20,16 +20,33 @@ export async function GET(req: Request) {
 
   try {
     const response = await fetch(
-      `https://eu.api.riotgames.com/val/ranked/v1/by-puuid/${puuid}`,
-      {
-        headers: {
-          "X-Riot-Token":
-            process.env.RIOT_API_KEY!,
-        },
-      }
-    );
+  `https://eu.api.riotgames.com/val/ranked/v1/by-puuid/${puuid}`,
+  {
+    headers: {
+      "X-Riot-Token":
+        process.env.RIOT_API_KEY!,
+    },
+  }
+);
 
-    if (!response.ok) {
+console.log(
+  "RIOT RANK STATUS:",
+  response.status
+);
+
+console.log(
+  "RIOT KEY EXISTS:",
+  !!process.env.RIOT_API_KEY
+);
+
+const body = await response.text();
+
+console.log(
+  "RIOT RANK RESPONSE:",
+  body
+);
+
+if (!response.ok) {
       return NextResponse.json(
         {
           error:
@@ -41,8 +58,7 @@ export async function GET(req: Request) {
       );
     }
 
-    const data =
-      await response.json();
+    const data = JSON.parse(body);
 
     return NextResponse.json(data);
   } catch {

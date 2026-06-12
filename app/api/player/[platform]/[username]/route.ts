@@ -153,10 +153,10 @@ async function loadRiotValorantProfile(
       `/valorant/v2/mmr/${region}/${encodedName}/${encodedTag}`
     ),
     henrikFetch(
-      `/valorant/v3/matches/${region}/${encodedName}/${encodedTag}?size=5`
-    ),
+  `/valorant/v3/matches/${region}/${encodedName}/${encodedTag}?size=5`
+),
   ]);
-
+  
   let rankData: any = null;
 
   if (mmrRes.ok) {
@@ -191,15 +191,17 @@ async function loadRiotValorantProfile(
   );
 
   const rank =
-    rankData?.data?.current_data
-      ?.currenttierpatched ?? "Unranked";
+  rankData?.data?.current_data
+    ?.currenttierpatched ??
+  "Not Ranked Yet";
 
   const elo =
     rankData?.data?.current_data?.elo ?? 0;
 
   const peakRank =
-    rankData?.data?.highest_rank
-      ?.patched_tier ?? "Unknown";
+  rankData?.data?.highest_rank
+    ?.patched_tier ??
+  "Not Ranked Yet";
 
   const player = await upsertPlayerWithTimeout({
     username,
@@ -267,12 +269,19 @@ export async function GET(
           },
         },
         include: {
-          matches: {
-            orderBy: { createdAt: "desc" },
-            take: 10,
-          },
-          achievements: true,
-        },
+  matches: {
+    orderBy: { createdAt: "desc" },
+    take: 10,
+  },
+
+  achievements: true,
+
+  user: {
+    select: {
+      username: true,
+    },
+  },
+},
       }),
       new Promise<null>((resolve) => {
         setTimeout(() => resolve(null), DB_TIMEOUT_MS);
