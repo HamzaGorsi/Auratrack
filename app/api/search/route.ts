@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-
+import { syncPlayer } from "@/lib/sync/syncPlayer";
 export async function GET(req: Request) {
   try {
     const { searchParams } =
@@ -82,7 +82,11 @@ export async function GET(req: Request) {
           rank: "Unranked",
         },
       });
-
+await syncPlayer(
+  `${gameName}#${tagLine}`,
+  "RIOT",
+  player.id
+);
     return Response.json({
       ...player,
       puuid: account.puuid,

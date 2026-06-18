@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { providers } from "@/lib/providers";
 import {
   useRouter,
@@ -17,7 +18,13 @@ import {
   SiUbisoft,
   SiEa,
 } from "react-icons/si";
-
+import {
+  FaUsers,
+  FaChartLine,
+  FaGamepad,
+  FaShieldAlt,
+} from "react-icons/fa";
+export const dynamic = "force-dynamic";
 export default function HomePage() {
   const [searchLoading, setSearchLoading] =
   useState(false);
@@ -65,6 +72,8 @@ const [trendingPlayers, setTrendingPlayers] =
   useState<any[]>([]);
   const [platformStats, setPlatformStats] =
   useState<any>(null);
+  const [news, setNews] =
+  useState<any[]>([]);
   useEffect(() => {
   const savedUsername =
     sessionStorage.getItem(
@@ -149,39 +158,64 @@ async function loadPlatformStats() {
 
 loadPlatformStats();
 loadLeaderboard();
-async function loadHomepageMatches() {
+async function loadTrendingPlayers() {
   try {
     const res = await fetch(
-      "/api/recent-searches"
+      "/api/trending",
+      {
+        cache: "no-store",
+      }
     );
 
     if (!res.ok) return;
 
-    const searches =
-      await res.json();
+    const data = await res.json();
 
-    const riotSearch =
-      searches.find(
-        (search: any) =>
-          search.platform === "RIOT"
-      );
-
-    if (!riotSearch) return;
-
-    const provider =
-      providers.RIOT;
-
-    const matches =
-      await provider.getMatches(
-        riotSearch.username
-      );
-
-    setHomepageMatches(
-      matches || []
-    );
+    setTrendingPlayers(data);
   } catch {}
 }
 
+loadTrendingPlayers();
+async function loadHomepageMatches() {
+  try {
+    const res = await fetch(
+      "/api/recent-matches",
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) return;
+
+    const matches =
+      await res.json();
+
+    setHomepageMatches(matches);
+
+  } catch {}
+}
+loadNews();
+async function loadNews() {
+  try {
+    const res = await fetch("/api/news");
+
+    if (!res.ok) return;
+
+    const data = await res.json();
+
+    // normalize to ALWAYS array
+    const normalized =
+      Array.isArray(data)
+        ? data
+        : data?.results
+          ? data.results
+          : [];
+
+    setNews(normalized);
+  } catch {
+    setNews([]);
+  }
+}
 loadHomepageMatches();
   return () => {
     window.removeEventListener(
@@ -312,31 +346,478 @@ if (detectedPlatform === "RIOT") {
 }
 };
  return (
-    <div className="relative min-h-screen overflow-x-hidden bg-black text-white">
-      <div className="fixed inset-0 bg-black -z-10" />
-        <div className="w-full px-4 sm:px-6 lg:px-10 pt-10 sm:pt-16 pb-10 sm:pb-16">
-          <div className="text-violet-300 text-sm font-semibold uppercase tracking-[2px]">
-            Built For Competitive Players
-          </div>
+    <div className="relative min-h-screen overflow-x-hidden text-white">
+        <div
+  className="
+    relative
+    w-full
+    px-4
+    sm:px-6
+    lg:px-10
+    pt-10
+    sm:pt-16
+    pb-10
+    sm:pb-16
+  "
+>
+          <div
+  className="
+    relative
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-black leading-[0.95] mt-5 max-w-[900px]">
-            Track Every Stat.
-            <br />
+    min-h-[900px]
 
-            <span className="bg-gradient-to-r from-[#ffffff] via-[#d4d4d8] to-[#a1a1aa] bg-clip-text text-transparent">
-              Dominate Every Match.
-            </span>
-          </h1>
+    grid
+    lg:grid-cols-[1fr_1fr]
 
-          <p className="text-white/60 text-base sm:text-[17px] leading-7 sm:leading-8 mt-6 max-w-[700px] font-medium">
-            Real-time analytics, competitive rankings, advanced match history,
-            social systems, tournaments, and premium gaming intelligence.
-          </p>
+    items-center
+  "
+>
+  <div className="relative z-10 max-w-[650px]">
 
+    <div className="text-[#00AFFF] font-black tracking-[4px] uppercase">
+      AuraTrack
+    </div>
+
+    <h1
+  className="
+  mt-4
+  text-7xl
+  md:text-[105px]
+  font-black
+  leading-[0.85]
+"
+>
+      TRACK.
+      <br />
+      ANALYZE.
+      <br />
+      <span className="text-[#00AFFF]">
+        DOMINATE.
+      </span>
+    </h1>
+
+    <p
+      className="
+      mt-8
+      text-xl
+      text-white/70
+      max-w-[500px]
+    "
+    >
+      All your games.
+      <br />
+      All your stats.
+      <br />
+      One place.
+    </p>
+
+    <div className="flex gap-4 mt-8">
+
+      <button
+  onClick={() =>
+    document
+      .getElementById(
+        "search-section"
+      )
+      ?.scrollIntoView({
+        behavior: "smooth",
+      })
+  }
+  className="
+  h-14
+  px-8
+  rounded-2xl
+  bg-[#00AFFF]
+  shadow-[0_0_30px_rgba(0,175,255,.45)]
+  hover:shadow-[0_0_45px_rgba(0,175,255,.75)]
+  text-black
+  font-black
+  hover:scale-105
+  transition-all
+"
+>
+  Search Player
+</button>
+
+      <button
+        className="
+        h-14
+        px-8
+        rounded-2xl
+        border
+        border-white/10
+        bg-white/5
+        font-black
+      "
+      >
+        Leaderboards
+      </button>
+
+    </div>
+
+  </div>
+
+  <div
+   className="
+    relative
+    z-10
+
+    flex
+    justify-center
+    items-center
+
+    lg:-translate-y-15
+    lg:-translate-x-31
+  "
+>
+  <div
+   className="
+    relative
+    w-[950px]
+    h-[950px]
+
+    flex
+    items-center
+    justify-center
+  "
+>
+  {/* BIG GLOW */}
+  <div
+     className="
+      absolute
+      inset-0
+
+      rounded-full
+
+      bg-cyan-500/8
+
+      blur-[180px]
+    "
+  />
+{/* PORTAL SPACE */}
+  <img
+    src="/portal-space.png"
+    alt=""
+    className="
+    absolute
+    w-[640px]
+    h-[640px]
+    object-cover
+    rounded-full
+  "
+  style={{
+    filter:
+      "brightness(0.55) contrast(1.35)",
+
+    animation:
+     "portalSpin 420s linear infinite"
+  }}
+/>
+{/* CENTER LOGO */}
+  <img
+    src="/logo-center.png"
+    alt="AuraTrack"
+
+    className="
+    absolute
+    z-[2]
+
+    w-[535px]
+    h-auto
+
+    object-contain
+  "
+/>
+  {/* ROTATING RING */}
+  <img
+   src="/logo-ring.png"
+   alt=""
+
+   className="
+    absolute
+    z-[5]
+
+    w-[800px]
+    h-[800px]
+
+    object-contain
+    translate-x-[15px]
+  "
+  style={{
+filter:
+"brightness(.95) saturate(1.25)"
+}}
+  />
+</div>
+
+</div>
+
+</div>
+<div className="relative z-10 grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-4 mb-16">
+
+  {[
+    "VALORANT",
+    "FORTNITE",
+    "APEX",
+    "CS2",
+    "ROCKET LEAGUE",
+    "R6 SIEGE",
+    "VIEW ALL",
+  ].map((game) => (
+    <div
+      key={game}
+      className="
+      rounded-[24px]
+      border
+      border-cyan-500/10
+
+      bg-[#0D1728]
+
+      hover:border-cyan-400/30
+      hover:bg-[#122238]
+      hover:shadow-[0_0_30px_rgba(0,175,255,0.15)]
+      hover:-translate-y-1
+      transition-all
+      duration-300
+
+      p-6
+      cursor-pointer
+    "
+    >
+      <div
+      className="
+      h-24
+      w-full
+      flex
+      items-center
+      justify-center
+  "
+>
+
+  {game === "VALORANT" && (
+    <img
+      src="/games/valorant.svg"
+      alt="Valorant"
+      className="
+      h-22
+      w-auto
+      opacity-90
+      translate-y-[10px]
+"
+    />
+  )}
+
+  {game === "FORTNITE" && (
+    <img
+      src="/games/fortnite.svg"
+      alt="Fortnite"
+      className="
+  h-35
+  w-auto
+  opacity-90
+  translate-y-[10px]
+"
+    />
+  )}
+
+  {game === "APEX" && (
+    <img
+      src="/games/apex.svg"
+      alt="Apex"
+      className="
+  h-20
+  w-auto
+  opacity-90
+  translate-y-[10px]
+"
+    />
+  )}
+
+  {game === "CS2" && (
+    <img
+      src="/games/cs2.svg"
+      alt="CS2"
+      className="
+  h-13
+  w-auto
+  opacity-90
+  translate-y-[10px]
+"
+    />
+  )}
+
+  {game === "ROCKET LEAGUE" && (
+    <img
+      src="/games/rocketleague.svg"
+      alt="Rocket League"
+      className="
+  h-35
+  w-auto
+  opacity-90
+  translate-y-[10px]
+"
+    />
+  )}
+
+  {game === "R6 SIEGE" && (
+    <img
+      src="/games/rainbow6.svg"
+      alt="Rainbow Six Siege"
+      className="
+  h-17
+  w-auto
+  opacity-90
+  translate-y-[15px]
+"
+    />
+  )}
+
+  {game === "VIEW ALL" && (
+  <div
+    className="
+      flex
+      flex-col
+      items-center
+      justify-center
+
+      h-full
+
+      gap-4
+    "
+  >
+    <div
+      className="
+        w-14
+        h-14
+
+        rounded-full
+
+        bg-cyan-500/10
+        border
+        border-cyan-500/20
+
+        flex
+        items-center
+        justify-center
+      "
+    >
+      <span className="text-3xl">
+        →
+      </span>
+    </div>
+
+    <div
+      className="
+        text-sm
+        uppercase
+        tracking-[3px]
+        text-white/80
+        font-bold
+      "
+    >
+      View All Games
+    </div>
+  </div>
+)}
+
+</div>
+  <div
+  className="
+    text-[10px]
+    uppercase
+    tracking-[3px]
+    text-white/30
+    mt-4
+  "
+>
+  Competitive Stats
+</div>    
+    </div>
+  ))}
+</div>
+<div
+  className="
+    grid
+    grid-cols-2
+    lg:grid-cols-4
+    gap-4
+    mb-14
+  "
+>
+  {[
+    {
+      label: "Players Tracked",
+      value: platformStats?.trackedPlayers || 0,
+    },
+    {
+      label: "Matches Analyzed",
+      value: platformStats?.matchesAnalyzed || 0,
+    },
+    {
+      label: "Games Supported",
+      value: platformStats?.gamesSupported || 0,
+    },
+    {
+      label: "Active Users",
+      value: platformStats?.liveUsers || 0,
+    },
+  ].map((item) => (
+    <div
+      key={item.label}
+      className="
+        rounded-[24px]
+        border
+        border-cyan-500/10
+        bg-[#08111D]
+        p-8
+      "
+    >
+      <div className="text-4xl font-black">
+        {item.value.toLocaleString()}
+      </div>
+
+      <div className="text-white/50 mt-2">
+        {item.label}
+      </div>
+    </div>
+  ))}
+</div>
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-14 items-stretch">
-            <div className="min-h-0 xl:min-h-[760px] rounded-[20px] bg-white/[0.04]
-backdrop-blur-3xl p-5 sm:p-8">
+            <div
+  id="search-section"
+  className="
+  min-h-0
+  xl:min-h-[520px]
+
+  rounded-[24px]
+
+  border
+  border-cyan-500/10
+
+  bg-[#08111D]
+
+  backdrop-blur-xl
+
+  p-5
+  sm:p-8
+
+  shadow-[0_0_40px_rgba(0,175,255,0.08)]
+"
+>
               <div>
+                <div className="mb-8">
+  <div className="uppercase tracking-[4px] text-[#00AFFF] text-sm">
+    Player Search
+  </div>
+
+  <h2 className="text-4xl font-black mt-3">
+    Find Any Player
+  </h2>
+
+  <div className="text-white/50 mt-3">
+    Search across supported games and platforms.
+  </div>
+</div>
                 <input
                   value={username}
                   onChange={async (e) => {
@@ -364,7 +845,7 @@ backdrop-blur-3xl p-5 sm:p-8">
     ? "Enter Riot ID (name#tag)"
     : "Search player username..."
 }
-                  className="w-full h-16 px-6 text-center rounded-2xl bg-[#161616] border-0 outline-none text-lg"
+                  className="w-full h-16 px-6 text-center rounded-2xl bg-[#0B1726] border-0 outline-none text-lg"
                 />
 {suggestions.length > 0 && (
   <div
@@ -373,7 +854,7 @@ backdrop-blur-3xl p-5 sm:p-8">
       rounded-2xl
       border
       border-white/[0.04]
-      bg-[#161616]
+      bg-[#0B1726]
       overflow-hidden
     "
   >
@@ -468,12 +949,12 @@ transition-all
 duration-300
 
 border
-border-white/[0.04]
+border-cyan-500/10
 
 ${
   item.name === "EPIC"
     ? platform === item.name
-      ? "bg-white text-black"
+      ? "bg-[#00AFFF] text-black"
       : "bg-white/10 text-white hover:bg-white/20"
 
     : item.name === "STEAM"
@@ -508,8 +989,8 @@ ${
 
     : item.name === "UBISOFT"
     ? platform === item.name
-      ? "bg-violet-700 text-white"
-      : "bg-violet-700/20 text-white hover:bg-violet-700/35"
+      ? "bg-cyan-700 text-white"
+      : "bg-cyan-700/20 text-cyan-300 hover:bg-cyan-700/35"
 
     : "bg-white/[0.03] text-white/60 hover:text-white hover:bg-white/[0.06]"
 }
@@ -528,25 +1009,21 @@ ${
   mt-5
   w-full
   h-16
+
   rounded-2xl
 
-  bg-gradient-to-r
-  from-violet-600/30
-  to-cyan-500/20
+  bg-[#00AFFF]
 
-  border
-  border-violet-400/30
-
-  backdrop-blur-xl
-
-  hover:border-violet-300/50
-
-  transition-all
-  duration-300
+  text-black
 
   font-black
   text-lg
 
+  hover:scale-[1.02]
+
+  transition-all
+  duration-300
+ 
   disabled:opacity-50
   disabled:cursor-not-allowed
 "
@@ -608,7 +1085,7 @@ ${
             : search.platform === "XBOX"
             ? "bg-green-700/15 border-green-500/20 hover:bg-green-700/25"
 
-            : "bg-[#161616] border-white/[0.05]"
+            : "bg-[#0B1726] border-white/[0.05]"
         }
       `}
     >
@@ -706,15 +1183,22 @@ ${
   <div
     key={item.label}
     className="
-rounded-2xl
+rounded-[24px]
+
 border
-border-white/[0.08]
-bg-white/[0.03]
-backdrop-blur-xl
+border-cyan-500/10
+
+bg-[#08111D]
+
+hover:border-cyan-400/30
+
+transition-all
+duration-300
+
 p-5
 "
   >
-    <div className="text-white/40 text-xs uppercase tracking-[2px]">
+    <div className="text-[#00AFFF] text-xs uppercase tracking-[2px]">
       {item.label}
     </div>
 
@@ -729,23 +1213,26 @@ p-5
             <div
   className="
   min-h-0
-  xl:min-h-[760px]
+  xl:min-h-[520px]
 
-  rounded-[20px]
+  rounded-[24px]
 
   border
-  border-white/[0.08]
+  border-cyan-500/10
 
-  bg-white/[0.03]
+  bg-[#08111D]
+
   backdrop-blur-xl
 
   p-5
   sm:p-8
+
+  shadow-[0_0_40px_rgba(0,175,255,0.08)]
 "
 >
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <div className="uppercase tracking-[4px] text-white/40 text-sm">
+                  <div className="uppercase tracking-[4px] text-[#00AFFF] text-sm">
                     Competitive Performance
                   </div>
 
@@ -759,8 +1246,10 @@ p-5
   h-11
   px-4
   rounded-2xl
-  bg-white/[0.04]
-  text-green-400
+  bg-cyan-500/10
+  text-[#00AFFF]
+  border
+  border-cyan-500/20
   font-bold
   inline-flex
   items-center
@@ -779,8 +1268,8 @@ p-5
       h-[420px]
       rounded-2xl
       border
-      border-white/[0.04]
-      bg-[#151515]
+      border-cyan-500/10
+      bg-[#08111D]
       flex
       items-center
       justify-center
@@ -809,17 +1298,17 @@ p-5
                     className={`
                       rounded-2xl
                       border
-                      border-white/[0.04]
-                      bg-[#151515]
+                      border-cyan-500/10
+                      bg-[#08111D]
                       p-[14px]
                     `}
                   >
                     <div className="flex items-center gap-3 flex-wrap mb-4">
-                      <div className="px-3 py-1 rounded-lg bg-white/5 border border-white/[0.04] text-xs font-bold text-white">
+                      <div className="px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-xs font-bold text-[#00AFFF]">
                         {match.game}
                       </div>
 
-                      <div className="px-3 py-1 rounded-lg bg-white/5 border border-white/[0.04] text-xs text-white/60">
+                      <div className="px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-xs text-white/60">
                         {match.platform}
                       </div>
 
@@ -896,21 +1385,24 @@ p-5
   className="
   h-full
 
-  rounded-[20px]
+  rounded-[24px]
 
   border
-  border-white/[0.08]
+  border-cyan-500/10
 
-  bg-white/[0.03]
+  bg-[#08111D]
+
   backdrop-blur-xl
 
   p-5
   sm:p-8
+
+  shadow-[0_0_40px_rgba(0,175,255,0.08)]
 "
 >
               <div className="flex items-center justify-between mb-8">
                 <div>
-                  <div className="uppercase tracking-[4px] text-white/40 text-sm">
+                  <div className="uppercase tracking-[4px] text-[#00AFFF] text-sm">
                     Esports & Gaming
                   </div>
 
@@ -921,56 +1413,52 @@ p-5
               </div>
 
               <div className="space-y-5 max-h-[620px] overflow-y-auto pr-2">
-                {[
-                  {
-                    title: "Valorant Champions Finals Break Viewership Records",
-                    description:
-                      "The 2026 Valorant Champions event surpassed previous esports records.",
-                  },
-                  {
-                    title: "Rocket League Adds New Ranked Rewards",
-                    description:
-                      "Epic Games introduced new competitive rewards for Rocket League.",
-                  },
-                  {
-                    title: "Fortnite Competitive Season Announced",
-                    description:
-                      "Epic revealed the roadmap for the next FNCS season.",
-                  },
-                  {
-                    title: "CS2 Major Prize Pool Increased",
-                    description:
-                      "Valve increased the Counter-Strike Major prize pool.",
-                  },
-                  {
-                    title: "Apex Legends Ranked Changes Released",
-                    description:
-                      "Respawn deployed major ranked balancing updates.",
-                  },
-                ].map((news) => (
-                  <div
-                    key={news.title}
-                    className="
-rounded-[20px]
-border
-border-white/[0.08]
+                {news.slice(0, 6).map((article) => (
+  <div
+    key={article.link}
+    className="
+      rounded-[24px]
+      border
+      border-cyan-500/10
+      bg-[#0B1626]
+      backdrop-blur-xl
+      p-5
+      sm:p-6
+      hover:border-cyan-400/30
+      transition-all
+      duration-300
+    "
+  >
+    <div className="text-lg sm:text-2xl font-black leading-snug">
+      {article.title}
+    </div>
 
-bg-white/[0.03]
-backdrop-blur-xl
+    <div className="text-white/65 leading-8 mt-5 text-[15px]">
+      {article.description ||
+        "No description available."}
+    </div>
 
-p-5
-sm:p-6
-"
-                  >
-                    <div className="text-lg sm:text-2xl font-black leading-snug">
-                      {news.title}
-                    </div>
-
-                    <div className="text-white/65 leading-8 mt-5 text-[15px]">
-                      {news.description}
-                    </div>
-                  </div>
-                ))}
+    <a
+      href={article.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="
+        inline-block
+        mt-5
+        text-[#00AFFF]
+        font-bold
+        hover:underline
+      "
+    >
+      Read Article →
+    </a>
+  </div>
+))}
+{news.length === 0 && (
+  <div className="text-center py-10 text-white/40">
+    No gaming news available.
+  </div>
+)}
               </div>
             </div>
 
@@ -979,12 +1467,11 @@ sm:p-6
   min-h-0
   xl:min-h-[760px]
 
-  rounded-[20px]
+  rounded-[24px]
 
   border
-  border-white/[0.08]
-
-  bg-white/[0.03]
+  border-cyan-500/10
+  bg-[#08111D]
   backdrop-blur-xl
 
   p-5
@@ -993,7 +1480,7 @@ sm:p-6
 >
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6 sm:mb-8">
                 <div>
-                  <div className="uppercase tracking-[4px] text-white/40 text-sm">
+                  <div className="uppercase tracking-[4px] text-[#00AFFF] text-sm">
                     Competitive Events
                   </div>
 
@@ -1002,7 +1489,7 @@ sm:p-6
                   </h2>
                 </div>
 
-                <div className="h-11 px-4 rounded-2xl bg-white/[0.04] text-green-400 font-bold inline-flex items-center justify-center synced-pulse whitespace-nowrap">
+                <div className="h-11 px-4 rounded-2xl bg-cyan-500/10 text-[#00AFFF] border border-cyan-500/20 font-bold inline-flex items-center justify-center synced-pulse whitespace-nowrap">
                   ONGOING / UPCOMING
                 </div>
               </div>
@@ -1039,9 +1526,8 @@ sm:p-6
                     className="
 rounded-2xl
 border
-border-white/[0.08]
-
-bg-white/[0.03]
+border-cyan-500/10
+bg-[#0B1626]
 backdrop-blur-xl
 
 p-4
@@ -1063,11 +1549,11 @@ px-5
 py-3
 rounded-2xl
 
-bg-white/[0.03]
+bg-cyan-500/10
 backdrop-blur-xl
 
 border
-border-white/[0.08]
+border-cyan-500/20
 
 font-black
 ">
@@ -1082,12 +1568,12 @@ font-black
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8">
             <div
   className="
-  rounded-[20px]
+  rounded-[24px]
 
-  border
-  border-white/[0.08]
+border
+border-cyan-500/10
 
-  bg-white/[0.03]
+bg-[#08111D]
   backdrop-blur-xl
 
   p-5
@@ -1096,7 +1582,7 @@ font-black
 >
   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
     <div>
-      <div className="uppercase tracking-[4px] text-white/40 text-sm">
+      <div className="uppercase tracking-[4px] text-[#00AFFF] text-sm">
         Gaming Community
       </div>
 
@@ -1109,8 +1595,11 @@ font-black
   h-11
   px-4
   rounded-2xl
-  bg-white/[0.04]
-  text-red-400
+  bg-cyan-500/10
+text-[#00AFFF]
+
+border
+border-cyan-500/20
   font-bold
   inline-flex
   items-center
@@ -1122,50 +1611,15 @@ font-black
 </div>
     </div>
   <div className="space-y-4">
-    {[
-  {
-    name: "Tarik",
-    game: "Valorant",
-    viewers: "128K viewers",
-    status: "LIVE",
-  },
-
-  {
-    name: "Clix",
-    game: "Fortnite",
-    viewers: "84K viewers",
-    status: "LIVE",
-  },
-
-  {
-    name: "iiTzTimmy",
-    game: "Apex Legends",
-    viewers: "59K viewers",
-    status: "LIVE",
-  },
-
-  {
-    name: "Jynxzi",
-    game: "Rainbow Six Siege",
-    viewers: "92K viewers",
-    status: "LIVE",
-  },
-
-  {
-    name: "Zen",
-    game: "Rocket League",
-    viewers: "31K viewers",
-    status: "LIVE",
-  },
-    ].map((creator, i) => (
+    {trendingPlayers.map((creator, i) => (
       <div
         key={i}
         className="
   rounded-2xl
   border
-  border-white/[0.08]
+  border-cyan-500/10
 
-  bg-white/[0.03]
+bg-[#0B1626]
   backdrop-blur-xl
 
   p-5
@@ -1177,16 +1631,16 @@ font-black
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="min-w-0">
             <div className="text-xl sm:text-2xl font-black">
-              {creator.name}
+              {creator.username}
             </div>
 
             <div className="flex items-center gap-3 mt-2">
-              <div className="px-3 py-1 rounded-lg bg-white/5 border border-white/[0.04] text-sm text-white font-bold">
-                {creator.game}
+              <div className="px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-sm text-white font-bold">
+                {creator.platform}
               </div>
 
               <div className="text-white/45">
-                {creator.viewers}
+                {`${creator._count.username} searches`}
               </div>
             </div>
           </div>
@@ -1195,7 +1649,7 @@ font-black
             <div className="w-3 h-3 rounded-full bg-emerald-400 synced-pulse" />
 
             <div className="text-white font-black">
-              {creator.status}
+              {"TRENDING"}
             </div>
           </div>
         </div>
@@ -1205,12 +1659,12 @@ font-black
 </div>
             <div
   className="
-  rounded-[20px]
+  rounded-[24px]
 
-  border
-  border-white/[0.08]
+border
+border-cyan-500/10
 
-  bg-white/[0.03]
+bg-[#08111D]
   backdrop-blur-xl
 
   p-5
@@ -1219,7 +1673,7 @@ font-black
 >
   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
     <div>
-      <div className="uppercase tracking-[4px] text-white/40 text-sm">
+      <div className="uppercase tracking-[4px] text-[#00AFFF] text-sm">
         Global Competitive Rankings
       </div>
 
@@ -1232,8 +1686,10 @@ font-black
   h-11
   px-4
   rounded-2xl
-  bg-white/[0.04]
-  text-green-400
+  bg-cyan-500/10
+  text-[#00AFFF]
+  border
+  border-cyan-500/20
   font-bold
   inline-flex
   items-center
@@ -1244,8 +1700,8 @@ font-black
   UPDATED LIVE
 </div>
     </div>
-    <div className="overflow-hidden rounded-[20px] border border-white/[0.04]">
-    <div className="grid grid-cols-[1.7fr_1.2fr_1fr_1fr] bg-white/[0.03] border-b border-white/[0.04] px-6 py-4 text-sm uppercase tracking-[3px] text-white/40 font-bold">
+    <div className="overflow-hidden rounded-[24px] border border-cyan-500/10">
+    <div className="grid grid-cols-[1.7fr_1.2fr_1fr_1fr] bg-[#0B1626] border-b border-white/[0.04] px-6 py-4 text-sm uppercase tracking-[3px] text-white/40 font-bold">
       <div>Player</div>
       <div>Game</div>
       <div>Rank Tier</div>

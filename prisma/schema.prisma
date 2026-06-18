@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
 }
 
 model User {
-  id       String @id @default(cuid())
+  id String @id @default(cuid())
 
   email    String @unique
   password String
@@ -23,32 +23,32 @@ model User {
 
   receivedRequests FriendRequest[] @relation("Receiver")
 
-  notifications Notification[]
-  searchHistory SearchHistory[]
-  bio           String? @default("")
-favoriteGame  String? @default("")
-avatarUrl     String? @default("")
-bannerUrl     String? @default("")
-connectedAccounts ConnectedAccount[]
+  notifications     Notification[]
+  searchHistory     SearchHistory[]
+  bio               String?            @default("")
+  favoriteGame      String?            @default("")
+  avatarUrl         String?            @default("")
+  bannerUrl         String?            @default("")
+  connectedAccounts ConnectedAccount[]
 }
 
 model Player {
-  id        String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  username  String
-  platform  String
+  username String
+  platform String
 
-  kills     Int      @default(0)
-  deaths    Int      @default(0)
-  wins      Int      @default(0)
-  games     Int      @default(0)
+  kills  Int @default(0)
+  deaths Int @default(0)
+  wins   Int @default(0)
+  games  Int @default(0)
 
-  rank      String   @default("Unranked")
+  rank String @default("Unranked")
 
-  bio           String @default("")
-  favoriteGame  String @default("Valorant")
-  bannerUrl     String @default("https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2000&auto=format&fit=crop")
-  avatarUrl     String @default("")
+  bio          String @default("")
+  favoriteGame String @default("Valorant")
+  bannerUrl    String @default("https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2000&auto=format&fit=crop")
+  avatarUrl    String @default("")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -57,32 +57,49 @@ model Player {
 
   achievements Achievement[]
 
-  userId String? @unique
-  user   User? @relation(fields: [userId], references: [id])
-
-  @@index([username])
-  @@index([platform])
+  userId       String?   @unique
+  user         User?     @relation(fields: [userId], references: [id])
+  lastSyncedAt DateTime?
+  riotPuuid    String?
 
   @@unique([username, platform])
+  @@index([username])
+  @@index([platform])
 }
 
 model Match {
-  id        String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  kills     Int
-  deaths    Int
-  wins      Int
+  externalMatchId String? @unique
+
+  game String
+
+  mode String
+
+  map String?
+
+  result String
+
+  kills   Int
+  deaths  Int
+  assists Int @default(0)
+
+  score String?
 
   createdAt DateTime @default(now())
 
   playerId String
-  player   Player @relation(fields: [playerId], references: [id])
+
+  player Player @relation(fields: [playerId], references: [id])
+
+  @@index([game])
+  @@index([createdAt])
 }
 
 model FriendRequest {
   id String @id @default(cuid())
 
-  senderId String
+  senderId   String
   receiverId String
 
   status String @default("PENDING")
@@ -97,7 +114,7 @@ model FriendRequest {
 model Notification {
   id String @id @default(cuid())
 
-  type String
+  type    String
   message String
 
   read Boolean @default(false)
@@ -105,7 +122,7 @@ model Notification {
   createdAt DateTime @default(now())
 
   userId String
-  user User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Activity {
@@ -117,6 +134,7 @@ model Activity {
 
   createdAt DateTime @default(now())
 }
+
 model SearchHistory {
   id String @id @default(cuid())
 
@@ -126,14 +144,15 @@ model SearchHistory {
   createdAt DateTime @default(now())
 
   userId String
-  user User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 
   @@index([userId])
 }
+
 model Achievement {
   id String @id @default(cuid())
 
-  title String
+  title       String
   description String
 
   icon String
@@ -141,19 +160,32 @@ model Achievement {
   unlockedAt DateTime @default(now())
 
   playerId String
+
   player Player @relation(fields: [playerId], references: [id])
 }
+
 model ConnectedAccount {
   id String @id @default(cuid())
 
-  platform String
+  platform  String
   accountId String
-  username String
-  tagline String?
-puuid String?
+  username  String
+  tagline   String?
+  puuid     String?
 
   userId String
-  user User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Game {
+  id String @id @default(cuid())
+
+  name String
+  slug String @unique
+
+  active Boolean @default(true)
 
   createdAt DateTime @default(now())
 }

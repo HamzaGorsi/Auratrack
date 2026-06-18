@@ -1,394 +1,328 @@
 # AuraTrack Project Status
 
-## Current State
+## Overall Progress
 
-* Next.js 15
-* TypeScript
-* Prisma ORM
-* PostgreSQL (Supabase)
-* NextAuth Authentication
-* Vercel Deployment
+Estimated completion: ~60%
 
-Status: Stable
+The UI foundation is largely complete. The next phase is integrating real APIs and synchronizing the database so every page displays live data instead of placeholders.
 
 ---
 
-# Core Systems
+# Completed
 
-## Authentication
+## Tech Stack
+
+- Next.js (App Router)
+- TypeScript
+- TailwindCSS
+- Prisma
+- PostgreSQL (Supabase)
+- Riot Games API integration
+- Authentication
+- Responsive layout
+
+---
+
+## UI
 
 Completed:
 
-* Registration working
-* Login working
-* Logout working
-* Session persistence working
-* NextAuth configured
-* Protected routes working
+- Navbar
+- Hero section
+- Animated portal
+- Global background
+- Game carousel
+- Homepage layout
+- Search page
+- Leaderboards page
+- Match history layout
+- Profile layouts
+- Dashboard layouts
+- Stats cards
+- Glass UI
+- Animated embers
+- Portal glow
+- Scroll restoration
+- Dark theme
 
 ---
 
 ## Database
 
-Completed:
+Current models
 
-* Prisma connected to Supabase
-* User model working
-* Player model working
-* SearchHistory model working
-* ConnectedAccount model working
-* FriendRequest model working
-* Notification model working
-* Achievement model working
+- User
+- Player
+- Match
+- FriendRequest
+- Notification
+- Activity
+- SearchHistory
+- Achievement
+- ConnectedAccount
+- Game
 
----
+Relations completed.
 
-# Riot Integration
-
-Completed:
-
-* RIOT_API_KEY configured
-* Riot account lookup working
-* Riot API requests working
-* Valorant account discovery working
-
-Previous issue:
-
-* Expired Riot API key in Vercel
-
-Resolved.
+Indexes completed.
 
 ---
 
-# Henrik Integration
+## Riot Integration
 
-Current Status: NOT WORKING
+Working
 
-Current Error:
+- Riot account lookup
+- Riot PUUID lookup
+- Rank lookup
+- Match history lookup
+- Match details lookup
 
-```json
-{"errors":[{"code":0,"message":"Unauthorized","status":401,"details":null}]}
-```
+Current provider:
 
-What has already been tested:
-
-* HENRIK_API_KEY exists in Vercel
-* New Henrik token generated
-* Token starts with HDEV-
-* Vercel redeployed
-* Authorization header changed to Bearer format
-* Query parameter auth removed
-
-Current State:
-
-* AuraTrack reaches Henrik API
-* Henrik rejects token with 401 Unauthorized
-
-Next Task:
-
-* Verify Henrik authentication documentation
-* Verify required header format
-* Verify token activation status
-
-Files involved:
-
-* lib/henrik.ts
-* app/api/player/[platform]/[username]/route.ts
+lib/providers/riot.ts
 
 ---
 
-# Player Profile Page
+## Search
 
-Status: 95%
+Implemented
 
-Completed:
+/api/search
 
-* Liquid Glass redesign
-* Hero card redesign
-* Stats cards redesign
-* Connected Accounts section redesign
-* Library redesign
-* Riot Connect modal redesign
-* Purple/Cyan theme removed from hover effects
-* Hover movement removed
-* Glass buttons implemented
-* Save button redesigned
+Features
 
-Remaining:
-
-* Final visual polish
-* Multi-game support architecture
+- Search Riot ID
+- Upsert Player
+- Store player
 
 ---
 
-# Navbar
+## Homepage APIs
 
-Status: Mostly Complete
+Completed
 
-Completed:
+/api/platform-stats
 
-* Dropdown bug fixed
-* Dropdown z-index fixed
-* Profile menu fixed
-* Mobile menu working
-* Login / Signup redesign
-* Purple navbar background mostly removed
+Returns
 
-Remaining:
-
-* Remove remaining flicker effect
-* Final button styling pass
-* Standardize colours across entire site
-
-Files:
-
-* components/Navbar.tsx
+- Players tracked
+- Matches analyzed
+- Games supported
+- Active users
+- Daily matches
+- Activities
 
 ---
 
-# UI Design System
+Trending endpoint
 
-Current Theme:
+/api/trending
 
-* Dark Liquid Glass
-* VisionOS inspired
-* Glass panels
-* Neutral glass buttons
-* Minimal hover effects
-* No movement animations on cards
-
-Glass Card:
-
-```css
-bg-white/[0.03]
-backdrop-blur-xl
-border-white/[0.08]
-```
-
-Glass Button:
-
-```css
-bg-white/[0.05]
-backdrop-blur-xl
-border-white/[0.08]
-hover:border-white/[0.16]
-```
-
-Removed:
-
-* hover:scale
-* hover:-translate
-* Heavy gaming-card animations
+Uses SearchHistory
 
 ---
 
-# Search System
+Recent Matches endpoint
 
-Completed:
-
-* Search page working
-* Search history saving
-* Recent searches display
-
-In Progress:
-
-* Delete search history entry (X button)
-
-Backend created:
-
-```text
-app/api/recent-searches/[id]/route.ts
-```
-
-Need:
-
-* Frontend delete button
-* Delete request integration
+/api/recent-matches
 
 ---
 
-# Friends System
+Recent Searches endpoint
 
-Status: Functional
-
-Completed:
-
-* Send friend request endpoint
-* Friend request UI
-* Session validation
-* Toast notifications
-
-Remaining:
-
-* Friends list
-* Pending requests
-* Accept / Decline system
-
-Files:
-
-* app/friends/page.tsx
+/api/recent-searches
 
 ---
 
-# Settings Page
+Leaderboard endpoint
 
-Status: Functional
+Exists
 
-Completed:
-
-* Account section
-* Security section
-* Appearance section
-
-Remaining:
-
-* Convert all buttons to unified design system
-* Remove old grey button styles
-
-Files:
-
-* app/settings/page.tsx
+Needs database sync.
 
 ---
 
-# Components
+News
 
-## TrendingPlayers
+Implemented
 
-Status:
+/api/news
 
-* Functional
-* Needs redesign
+Using NewsData.io
 
-Planned:
+Returns esports news.
 
-* Full Liquid Glass conversion
-
----
-
-## LiveActivity
-
-Status:
-
-* Functional
-* Needs redesign
-
-Planned:
-
-* Full Liquid Glass conversion
+Needs frontend integration.
 
 ---
 
-## Leaderboard
+Synchronization
 
-Status:
+Created
 
-* Working
+lib/sync
 
-Issues:
+Contains
 
-* Uses limited data
-* Needs visual redesign
-* Needs better rankings system
+saveMatches.ts
 
----
+updatePlayerStats.ts
 
-# Loading Screen
-
-Current Status:
-
-* Existing loader works
-
-Researching:
-
-* New premium loading experience
-* Less generic spinner
-* More memorable branding
-
-Ideas:
-
-* Aura portal
-* Character movement
-* Energy core
-* Multi-game themed loading animation
-
-PixiJS possibility discussed but not implemented.
+Need automatic execution after player sync.
 
 ---
 
-# Multi-Game Architecture
+Real APIs
 
-Current Reality
+Working
 
-AuraTrack currently supports:
+- Riot
 
-```text
-RIOT -> Valorant
-```
+Waiting
 
-Only.
-
-Not Yet Supported:
-
-* CS2
-* Fortnite
-* Apex Legends
-* Overwatch 2
-* Rainbow Six Siege
-* Rocket League
-* Marvel Rivals
-* League of Legends
-
-Future Architecture:
-
-User
-└── Connected Accounts
-
-Games
-├── Valorant
-├── CS2
-├── Fortnite
-├── Apex
-├── R6
-└── etc
-
-Each game:
-
-* Stats
-* Match History
-* Rank
-* Achievements
+- Steam
+- Epic
+- Faceit
+- Tracker Network
+- Liquipedia
+- PandaScore
 
 ---
 
-# Known Issues
+Problems
 
-1. Henrik API returns 401 Unauthorized.
-2. Minor navbar flickering still present.
-3. Recent search deletion UI not implemented.
-4. Buttons not fully standardized site-wide.
-5. Leaderboard data is limited.
-6. Multi-game backend not implemented.
+Current blocker
+
+Player table in Supabase is older than schema.
+
+Database missing
+
+- lastSyncedAt
+- riotPuuid
+
+Prisma schema contains them.
+
+Supabase database does not.
+
+Result
+
+Leaderboard crashes.
+
+Player sync incomplete.
 
 ---
 
-# Next Priorities
+Need to Fix Immediately
 
-1. Fix Henrik authentication.
-2. Finish search-history delete feature.
-3. Standardize all buttons.
-4. Fix remaining navbar flicker.
-5. Redesign Leaderboard.
-6. Redesign TrendingPlayers.
-7. Redesign LiveActivity.
-8. Implement multi-game architecture.
+1.
+
+Synchronize Prisma schema with Supabase database.
+
+2.
+
+Add missing Player columns.
+
+3.
+
+Store Riot matches into Match table.
+
+4.
+
+Update Player stats after sync.
 
 ---
 
-# Last Completed Task
+Next Backend Tasks
 
-* Navbar dropdown bug fixed.
-* Navbar z-index fixed.
-* Login / Signup buttons redesigned.
-* Search history delete API route created.
-* Liquid Glass profile redesign completed.
+Priority 1
+
+Database synchronization
+
+Priority 2
+
+Automatic Riot sync
+
+Priority 3
+
+Player profile
+
+Priority 4
+
+Recent matches
+
+Priority 5
+
+Leaderboard
+
+Priority 6
+
+News section
+
+Priority 7
+
+Friends
+
+Priority 8
+
+Notifications
+
+Priority 9
+
+Achievements
+
+Priority 10
+
+Connected accounts
+
+---
+
+Future Integrations
+
+Steam
+
+Epic
+
+Faceit
+
+Tracker Network
+
+PandaScore
+
+Liquipedia
+
+HLTV
+
+R6 API
+
+Rocket League API
+
+Fortnite API
+
+---
+
+Production Checklist
+
+RLS policies
+
+Rate limiting
+
+Caching
+
+Error logging
+
+Analytics
+
+SEO
+
+Image optimization
+
+Redis caching
+
+CDN
+
+Deployment
+
+Monitoring
+
+Backups

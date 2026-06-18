@@ -1,5 +1,7 @@
 import { Provider } from "./types";
-
+import { saveMatches } from "../sync/saveMatches";
+import { prisma } from "@/lib/prisma";
+import { updatePlayerStats } from "../sync/updatePlayerStats";
 export const riotProvider: Provider = {
   async searchPlayer(username) {
   const split =
@@ -109,6 +111,8 @@ if (!playerData) {
 }
 
 return {
+  externalMatchId: matchId,
+
   game: "Valorant",
 
   result:
@@ -120,74 +124,61 @@ return {
       : "DEFEAT",
 
   mode:
-  matchData.matchInfo
-    ?.queueId === "competitive"
+    matchData.matchInfo?.queueId === "competitive"
       ? "Competitive"
-
-      : matchData.matchInfo
-          ?.queueId === "unrated"
-        ? "Unrated"
-
-      : matchData.matchInfo
-          ?.queueId === "swiftplay"
-        ? "Swiftplay"
-
+      : matchData.matchInfo?.queueId === "unrated"
+      ? "Unrated"
+      : matchData.matchInfo?.queueId === "swiftplay"
+      ? "Swiftplay"
       : "Valorant",
 
-  score:
-  matchData.matchInfo
-    ?.mapId
+  map:
+    matchData.matchInfo?.mapId
       ?.split("/")
       .pop()
-      ?.replace(
-        "Juliett",
-        "Sunset"
-      )
-      ?.replace(
-        "Triad",
-        "Lotus"
-      )
-      ?.replace(
-        "Bonsai",
-        "Split"
-      )
-      ?.replace(
-        "Ascent",
-        "Ascent"
-      )
-      ?.replace(
-        "Port",
-        "Icebox"
-      )
-      ?.replace(
-        "Pitt",
-        "Pearl"
-      )
-      ?.replace(
-        "Canyon",
-        "Fracture"
-      )
-      ?.replace(
-        "Foxtrot",
-        "Breeze"
-      ) ||
-  "Unknown Map",
+      ?.replace("Juliett", "Sunset")
+      ?.replace("Triad", "Lotus")
+      ?.replace("Bonsai", "Split")
+      ?.replace("Port", "Icebox")
+      ?.replace("Pitt", "Pearl")
+      ?.replace("Canyon", "Fracture")
+      ?.replace("Foxtrot", "Breeze") ||
+    "Unknown",
 
-  kills:
-    playerData.stats.kills,
+  score: null,
 
-  deaths:
-    playerData.stats.deaths,
+  kills: playerData.stats.kills,
 
- assists:
-  playerData.stats.assists,
+  deaths: playerData.stats.deaths,
+
+  assists: playerData.stats.assists,
 };
       }
     )
   );
 
-return detailedMatches.filter(Boolean);
+const matches =
+  detailedMatches.filter(Boolean);
+const player =
+  await prisma.player.findUnique({
+    where: {
+      username_platform: {
+        username,
+        platform: "RIOT",
+      },
+    },
+  });
 
+if (player) {
+  await saveMatches(
+    player.id,
+    matches
+  );
+
+  await updatePlayerStats(
+    player.id
+  );
+}
   } catch {
     return [];
   }

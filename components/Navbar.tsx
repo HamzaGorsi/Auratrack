@@ -6,18 +6,20 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/leaderboard", label: "Leaderboard" },
-  { href: "/friends", label: "Social" },
+  { href: "/search", label: "Search" },
+  { href: "/games", label: "Games" },
+  { href: "/leaderboard", label: "Leaderboards" },
+  { href: "/matches", label: "Matches" },
+  { href: "/analytics", label: "Analytics" },
 ];
 
 function navLinkClass(pathname: string, href: string) {
   const active = pathname === href;
   return `
-    h-11 px-6 rounded-xl flex items-center transition-all duration-200
+    h-9 px-5 rounded-lg flex items-center transition-all duration-200
     ${
       active
-  ? "bg-white/[0.06] text-white"
+  ? "bg-cyan-500/10 border border-cyan-500/20 text-white"
         : "text-white/65 hover:text-white"
     }
   `;
@@ -64,42 +66,48 @@ export default function Navbar() {
   ref={mobileRef}
   className="
     w-full
-    min-h-[72px] sm:min-h-24
-    rounded-[20px]
-    border border-white/[0.04]
+    h-[78px]
+rounded-[16px]
+    border border-cyan-500/15
     bg-white/[0.03]
 backdrop-blur-xl
+shadow-[0_0_30px_rgba(0,175,255,0.12)]
     flex flex-col
     relative
     z-[999]
     overflow-visible
   "
 >
-        <div className="flex items-center justify-between px-4 md:px-8 py-3 sm:py-0 sm:min-h-24">
+        <div className="flex items-center justify-between px-6 h-full">
           {/* LEFT */}
-          <div className="flex items-center gap-4 sm:gap-8 md:gap-12 min-w-0">
+          <div className="flex items-center gap-5 min-w-0">
             <Link
               href="/"
-              className="flex items-center gap-3 sm:gap-4 min-w-0"
+              className="flex items-center gap-2 min-w-0"
             >
               <div
-                className="
-                  w-10 h-10 sm:w-12 sm:h-12
-                  rounded-2xl bg-gradient-to-br
-                  from-cyan-500 via-[#111111] to-sky-600
-                  flex items-center justify-center
-                  font-black text-lg sm:text-xl
-                  flex-shrink-0
-                "
-              >
-                O
-              </div>
+  className="
+    relative
+    w-12 h-12 sm:w-18 sm:h-18
+    flex-shrink-0
+  "
+>
+  <img
+    src="/logo-at.png"
+    alt="AuraTrack"
+    className="
+      w-full
+      h-full
+      object-contain
+    "
+  />
+</div>
 
               <div className="min-w-0">
-                <div className="text-xl sm:text-2xl md:text-3xl font-black tracking-[2px] sm:tracking-[4px] uppercase text-white truncate">
+                <div className="text-[16px] font-black text-white leading-none">
                   AuraTrack
                 </div>
-                <div className="hidden sm:block text-[10px] text-white/45 uppercase tracking-[5px] font-semibold">
+                <div className="hidden sm:block text-[8px] text-white/45 uppercase tracking-[2px] font-semibold">
                   Track Your Aura.
                 </div>
               </div>
@@ -108,11 +116,20 @@ backdrop-blur-xl
             {/* DESKTOP NAV */}
             <nav
   className="
-    hidden xl:flex items-center gap-10
-    rounded-2xl border border-white/[0.04]
-    bg-black/20
-    p-2
-  "
+    hidden xl:flex
+    items-center
+    gap-1
+
+    rounded-xl
+
+    border
+    border-cyan-500/15
+
+    bg-[#07111D]/90
+
+    px-2
+    py-1
+"
 >
               {navLinks.map((link) => (
                 <Link
@@ -263,16 +280,17 @@ border border-white/[0.08]
                 </div>
               </div>
             ) : (
+              
               <>
                 <Link
                   href="/login"
                   className="
   hidden sm:flex
-  h-12
-  min-w-[90px]
+  h-10
+min-w-[72px]
   px-5 sm:px-6
 
-  rounded-2xl
+  rounded-xl
 
   bg-cyan-500/12
   backdrop-blur-xl
@@ -298,11 +316,11 @@ border border-white/[0.08]
                 <Link
                   href="/signup"
                   className="
-  h-12
-  min-w-[90px]
-  px-6
+  h-10
+  min-w-[72px]
+  px-5
 
-  rounded-2xl
+  rounded-xl
 
   bg-cyan-500/12
   backdrop-blur-xl
@@ -350,7 +368,7 @@ border border-white/[0.08]
                 onClick={() => setMobileMenuOpen(false)}
                 className={`
                   h-12 px-5 rounded-xl flex items-center font-semibold
-                  ${pathname === link.href ? "bg-white/[0.06] text-white" : "text-white/70 hover:bg-white/[0.04]"}
+                  ${pathname === link.href ? "bg-cyan-500/15 text-white border border-cyan-500/20 " : "text-white/70 hover:bg-white/[0.04]"}
                 `}
               >
                 {link.label}

@@ -177,3 +177,72 @@ body {
 .liquid-glass:hover {
   border-color: rgba(255,255,255,0.16);
 }
+
+@keyframes auraPulse {
+  0% {
+    opacity: .6;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: .6;
+    transform: scale(1);
+  }
+}
+
+.animate-auraPulse {
+  animation:
+    auraPulse 4s ease-in-out infinite;
+}
+@keyframes ringRotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-ringRotate {
+  animation:
+    ringRotate 18s linear infinite;
+}
+@keyframes electricPulse {
+  0% {
+    filter:
+      drop-shadow(0 0 15px #00AFFF)
+      drop-shadow(0 0 30px #00AFFF);
+  }
+
+  50% {
+    filter:
+      drop-shadow(0 0 35px #00AFFF)
+      drop-shadow(0 0 70px #00AFFF);
+  }
+
+  100% {
+    filter:
+      drop-shadow(0 0 15px #00AFFF)
+      drop-shadow(0 0 30px #00AFFF);
+  }
+}
+
+.animate-electricPulse {
+  animation:
+    electricPulse 2.5s ease-in-out infinite;
+}
+@keyframes portalSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

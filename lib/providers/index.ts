@@ -1,6 +1,8 @@
 import { riotProvider } from "./riot";
 import { steamProvider } from "./steam";
 
+import { fortniteProvider } from "./fortnite";
+import { apexProvider } from "./apex";
 const placeholderProvider = {
   async searchPlayer(username: string) {
     return {
@@ -18,10 +20,10 @@ export const providers = {
   RIOT: riotProvider,
   STEAM: steamProvider,
 
-  EPIC: placeholderProvider,
+  EPIC: fortniteProvider,
   PSN: placeholderProvider,
   XBOX: placeholderProvider,
-  EA: placeholderProvider,
+  EA: apexProvider,
   UBISOFT: placeholderProvider,
   "BATTLE.NET": placeholderProvider,
 };
