@@ -41,7 +41,6 @@ export async function POST(req: Request) {
         kills,
         deaths,
         wins,
-
         playerId: player.id,
       },
     });
