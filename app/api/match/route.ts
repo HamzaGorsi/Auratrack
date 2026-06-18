@@ -6,13 +6,11 @@ export async function POST(req: Request) {
   const body = await req.json();
 
   const {
-    username,
-    platform,
-
-    kills,
-    deaths,
-    wins,
-  } = body;
+  username,
+  platform,
+  kills,
+  deaths,
+} = body;
 
   const player =
     await prisma.player.findUnique({
@@ -35,15 +33,13 @@ export async function POST(req: Request) {
     );
   }
 
-  const match =
-    await prisma.match.create({
-      data: {
-        kills,
-        deaths,
-        wins,
-        playerId: player.id,
-      },
-    });
+  const match = await prisma.match.create({
+  data: {
+    kills,
+    deaths,
+    playerId: player.id,
+  },
+});
 
   // LIVE ACTIVITY
   await prisma.activity.create({
@@ -55,22 +51,14 @@ export async function POST(req: Request) {
   });
 
   // UPDATED STATS
-  const totalKills =
-    player.kills + kills;
+const totalKills = player.kills + kills;
+const totalDeaths = player.deaths + deaths;
+const totalGames = player.games + 1;
 
-  const totalDeaths =
-    player.deaths + deaths;
-
-  const totalWins =
-    player.wins + wins;
-
-  const totalGames =
-    player.games + 1;
-
-  const kd =
-    totalDeaths > 0
-      ? totalKills / totalDeaths
-      : totalKills;
+const kd =
+  totalDeaths > 0
+    ? totalKills / totalDeaths
+    : totalKills;
 
   // ACHIEVEMENT CHECKS
   const unlocked =
@@ -122,11 +110,6 @@ export async function POST(req: Request) {
     await unlock("Sharpshooter");
   }
 
-  if (totalWins >= 25) {
-    await unlock(
-      "Elite Competitor"
-    );
-  }
 
   if (kd >= 5) {
     await unlock("Unstoppable");
@@ -136,17 +119,10 @@ export async function POST(req: Request) {
     await unlock("Veteran");
   }
 await prisma.player.update({
-  where: {
-    id: player.id,
-  },
-
+  where: { id: player.id },
   data: {
     kills: totalKills,
-
     deaths: totalDeaths,
-
-    wins: totalWins,
-
     games: totalGames,
   },
 });
