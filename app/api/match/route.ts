@@ -33,11 +33,18 @@ export async function POST(req: Request) {
     );
   }
 
-  const match = await prisma.match.create({
+const match = await prisma.match.create({
   data: {
     kills,
     deaths,
-    playerId: player.id,
+    game: "Valorant",
+    mode: "Competitive",
+    result: "Unknown",
+    player: {
+      connect: {
+        id: player.id,
+      },
+    },
   },
 });
 

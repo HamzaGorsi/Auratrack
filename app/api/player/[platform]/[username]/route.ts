@@ -322,10 +322,7 @@ export async function GET(
           id: match.id,
           kills: match.kills,
           deaths: match.deaths,
-          result:
-            match.wins > 0
-              ? "VICTORY"
-              : "DEFEAT",
+          result: match.result ?? "Unknown",
           createdAt: match.createdAt,
         })
       ),
