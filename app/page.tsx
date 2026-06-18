@@ -199,20 +199,23 @@ async function loadNews() {
   try {
     const res = await fetch("/api/news");
 
-    if (!res.ok) return;
-
     const data = await res.json();
 
-    // normalize to ALWAYS array
-    const normalized =
-      Array.isArray(data)
-        ? data
-        : data?.results
-          ? data.results
-          : [];
+    if (Array.isArray(data)) {
+      setNews(data);
+      return;
+    }
 
-    setNews(normalized);
-  } catch {
+    if (Array.isArray(data?.results)) {
+      setNews(data.results);
+      return;
+    }
+
+    console.error("News API returned:", data);
+
+    setNews([]);
+  } catch (err) {
+    console.error(err);
     setNews([]);
   }
 }
@@ -1413,7 +1416,7 @@ p-5
               </div>
 
               <div className="space-y-5 max-h-[620px] overflow-y-auto pr-2">
-                {news.slice(0, 6).map((article) => (
+                {(Array.isArray(news) ? news : []).slice(0, 6).map((article) => (
   <div
     key={article.link}
     className="
